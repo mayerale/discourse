@@ -6,7 +6,7 @@ require_relative 'importers/importer_factory'
 module ImportScripts::JForum
   class Importer < ImportScripts::Base
     # @param settings [ImportScripts::JForum::Settings]
-    # @param database [ImportScripts::JForum::Database_3_0 | ImportScripts::JForum::Database_3_1]
+    # @param database [ImportScripts::JForum::Database_2_1]
     def initialize(settings, database)
       @settings = settings
       super()
