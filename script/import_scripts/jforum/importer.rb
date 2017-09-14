@@ -27,7 +27,7 @@ module ImportScripts::JForum
 
       import_users
       #import_anonymous_users if @settings.import_anonymous_users
-      #import_categories
+      import_categories
       #import_posts
       #import_private_messages if @settings.import_private_messages
       #import_bookmarks if @settings.import_bookmarks
@@ -57,6 +57,7 @@ module ImportScripts::JForum
       true
     end
 
+    # MIGRATED morn
     def import_users
       puts '', 'creating users'
       total_count = @database.count_users

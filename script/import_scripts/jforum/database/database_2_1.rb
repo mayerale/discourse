@@ -50,17 +50,19 @@ module ImportScripts::JForum
     #   SQL
     # end
 
+    # MIGRATED morn
     def fetch_categories
+      # discourse category = jforum forum
+
       query(<<-SQL)
-        SELECT f.forum_id, f.parent_id, f.forum_name, f.forum_desc, x.first_post_time
+        SELECT f.forum_id, f.forum_name, f.forum_desc, x.first_post_time
         FROM #{@table_prefix}forums f
           LEFT OUTER JOIN (
             SELECT MIN(topic_time) AS first_post_time, forum_id
             FROM #{@table_prefix}topics
             GROUP BY forum_id
           ) x ON (f.forum_id = x.forum_id)
-        WHERE f.forum_type != #{Constants::FORUM_TYPE_LINK}
-        ORDER BY f.parent_id, f.left_id
+        ORDER BY f.forum_id
       SQL
     end
 

@@ -9,11 +9,12 @@ module ImportScripts::JForum
       @permalink_importer = permalink_importer
     end
 
+    # MIGRATED morn
     def map_category(row)
       {
         id: row[:forum_id],
         name: CGI.unescapeHTML(row[:forum_name]),
-        parent_category_id: @lookup.category_id_from_imported_category_id(row[:parent_id]),
+        # parent_category_id: @lookup.category_id_from_imported_category_id(row[:parent_id]),
         post_create_action: proc do |category|
           update_category_description(category, row)
           @permalink_importer.create_for_category(category, row[:forum_id])
@@ -23,6 +24,7 @@ module ImportScripts::JForum
 
     protected
 
+    # MIGRATED morn
     # @param category [Category]
     def update_category_description(category, row)
       return if row[:forum_desc].blank? && row[:first_post_time].blank?
