@@ -75,6 +75,7 @@ module ImportScripts::JForum
       end
     end
 
+    # MIGRATED morn
     def import_categories
       puts '', 'creating categories'
       rows = @database.fetch_categories
