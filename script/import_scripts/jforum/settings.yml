@@ -37,10 +37,6 @@ import:
     gallery: true   # import the predefined avatars phpBB offers
     remote: true   # WARNING: This can considerably slow down your import. It will try to download remote avatars.
 
-  # When true: Anonymous users are imported as suspended users. They can't login and have no email address.
-  # When false: The system user will be used for all anonymous users.
-  anonymous_users: false
-
   # Enable this, if you want import password hashes in order to use the "migratepassword" plugin.
   # This will allow users to login with their current password.
   # The plugin is available at: https://github.com/discoursehosting/discourse-migratepassword

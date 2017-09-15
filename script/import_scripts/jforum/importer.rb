@@ -26,9 +26,8 @@ module ImportScripts::JForum
       puts '', "importing from jforum"
 
       import_users
-      #import_anonymous_users if @settings.import_anonymous_users
       import_categories
-      #import_posts
+      import_posts
       #import_private_messages if @settings.import_private_messages
       #import_bookmarks if @settings.import_bookmarks
     end
@@ -76,24 +75,6 @@ module ImportScripts::JForum
       end
     end
 
-    # def import_anonymous_users
-    #   puts '', 'creating anonymous users'
-    #   total_count = @database.count_anonymous_users
-    #   importer = @importers.user_importer
-    #   last_username = ''
-    #
-    #   batches do |offset|
-    #     rows, last_username = @database.fetch_anonymous_users(last_username)
-    #     break if rows.size < 1
-    #
-    #     next if all_records_exist?(:users, importer.map_anonymous_users_to_import_ids(rows))
-    #
-    #     create_users(rows, total: total_count, offset: offset) do |row|
-    #       importer.map_anonymous_user(row)
-    #     end
-    #   end
-    # end
-
     def import_categories
       puts '', 'creating categories'
       rows = @database.fetch_categories
@@ -104,6 +85,7 @@ module ImportScripts::JForum
       end
     end
 
+    # MIGRATED morn
     def import_posts
       puts '', 'creating topics and posts'
       total_count = @database.count_posts

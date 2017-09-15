@@ -1,3 +1,5 @@
+# MIGRATED morn
+
 module ImportScripts::JForum
   class AttachmentImporter
     # @param database [ImportScripts::JForum::Database_3_0 | ImportScripts::JForum::Database_3_1]

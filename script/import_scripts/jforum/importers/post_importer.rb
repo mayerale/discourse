@@ -1,3 +1,5 @@
+# MIGRATED morn
+
 module ImportScripts::JForum
   class PostImporter
     # @param lookup [ImportScripts::LookupContainer]
@@ -44,7 +46,7 @@ module ImportScripts::JForum
     protected
 
     def import_attachments(row, user_id)
-      if @settings.import_attachments && row[:post_attachment] > 0
+      if @settings.import_attachments && row[:attach] > 0
         @attachment_importer.import_attachments(user_id, row[:post_id], row[:topic_id])
       end
     end
@@ -53,6 +55,7 @@ module ImportScripts::JForum
       mapped[:category] = @lookup.category_id_from_imported_category_id(row[:forum_id])
       mapped[:title] = CGI.unescapeHTML(row[:topic_title]).strip[0...255]
       mapped[:pinned_at] = mapped[:created_at] unless row[:topic_type] == Constants::POST_NORMAL
+      # TODO morn gibt es nicht?
       mapped[:pinned_globally] = row[:topic_type] == Constants::POST_GLOBAL
       mapped[:post_create_action] = proc do |post|
         @permalink_importer.create_for_topic(post.topic, row[:topic_id])
@@ -80,9 +83,11 @@ module ImportScripts::JForum
     end
 
     def add_poll(row, mapped_post)
-      return if row[:poll_title].blank?
+      return if row[:vote_text].blank?
 
-      poll = Poll.new(row[:poll_title], row[:poll_max_options], row[:poll_end])
+      poll_end = Time.zone.at(row[:vote_start]) + row[:vote_length].days
+
+      poll = Poll.new(row[:vote_desc], 0, poll_end)
       mapped_poll = @poll_importer.map_poll(row[:topic_id], poll)
 
       if mapped_poll.present?

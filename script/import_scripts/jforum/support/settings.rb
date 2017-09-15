@@ -7,7 +7,6 @@ module ImportScripts::JForum
       Settings.new(yaml)
     end
 
-    attr_reader :import_anonymous_users
     attr_reader :import_attachments
     attr_reader :import_private_messages
     attr_reader :import_polls
@@ -32,7 +31,6 @@ module ImportScripts::JForum
 
     def initialize(yaml)
       import_settings = yaml['import']
-      @import_anonymous_users = import_settings['anonymous_users']
       @import_attachments = import_settings['attachments']
       @import_private_messages = import_settings['private_messages']
       @import_polls = import_settings['polls']

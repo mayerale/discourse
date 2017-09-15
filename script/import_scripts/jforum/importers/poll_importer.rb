@@ -1,3 +1,5 @@
+# MIGRATED morn
+
 module ImportScripts::JForum
   class PollImporter
     # @param lookup [ImportScripts::LookupContainer]
@@ -26,7 +28,7 @@ module ImportScripts::JForum
       }
 
       add_poll_to_custom_fields(mapped_poll[:custom_fields], extracted_poll)
-      add_votes_to_custom_fields(mapped_poll[:custom_fields], topic_id, poll)
+      #add_votes_to_custom_fields(mapped_poll[:custom_fields], topic_id, poll)
 
       mapped_poll
     end
@@ -38,13 +40,14 @@ module ImportScripts::JForum
       options_by_text = Hash.new { |h, k| h[k] = { ids: [], total_votes: 0, anonymous_votes: 0 } }
 
       rows.each do |row|
-        option_text = @text_processor.process_raw_text(row[:poll_option_text]).delete("\n")
+        option_text = @text_processor.process_raw_text(row[:vote_option_text]).delete("\n")
 
         # phpBB allows duplicate options (why?!) - we need to merge them
+        # TODO morn stimmt das noch?
         option = options_by_text[option_text]
-        option[:ids] << row[:poll_option_id]
+        option[:ids] << row[:vote_option_id]
         option[:text] = option_text
-        option[:total_votes] += row[:total_votes]
+        option[:total_votes] += row[:anonymous_votes]
         option[:anonymous_votes] += row[:anonymous_votes]
       end
 
@@ -83,7 +86,7 @@ module ImportScripts::JForum
     def update_poll_metadata(extracted_poll, topic_id, poll)
       row = @database.get_voters(topic_id)
 
-      extracted_poll['voters'] = row[:total_voters]
+      extracted_poll['voters'] = row[:anonymous_voters]
       extracted_poll['anonymous_voters'] = row[:anonymous_voters] if row[:anonymous_voters] > 0
       extracted_poll['status'] = poll.has_ended? ? :open : :closed
     end
@@ -92,7 +95,7 @@ module ImportScripts::JForum
     def update_poll_options(extracted_poll, imported_options, poll)
       extracted_poll['options'].each_with_index do |option, index|
         imported_option = imported_options[index]
-        option['votes'] = imported_option[:total_votes]
+        option['votes'] = imported_option[:anonymous_votes]
         option['anonymous_votes'] = imported_option[:anonymous_votes] if imported_option[:anonymous_votes] > 0
         poll.add_option_id(imported_option[:ids], option['id'])
       end
@@ -103,6 +106,7 @@ module ImportScripts::JForum
       custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] = { DiscoursePoll::DEFAULT_POLL_NAME => extracted_poll }
     end
 
+    # TODO delete, because JForum supports only anonymous votes
     # @param custom_fields [Hash]
     # @param poll [ImportScripts::JForum::Poll]
     def add_votes_to_custom_fields(custom_fields, topic_id, poll)

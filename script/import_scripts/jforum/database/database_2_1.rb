@@ -29,27 +29,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # def count_anonymous_users
-    #   count(<<-SQL)
-    #     SELECT COUNT(DISTINCT post_username) AS count
-    #     FROM #{@table_prefix}posts
-    #     WHERE post_username <> ''
-    #   SQL
-    # end
-    #
-    # def fetch_anonymous_users(last_username)
-    #   last_username = escape(last_username)
-    #
-    #   query(<<-SQL, :post_username)
-    #     SELECT post_username, MIN(post_time) AS first_post_time
-    #     FROM #{@table_prefix}posts
-    #     WHERE post_username > '#{last_username}'
-    #     GROUP BY post_username
-    #     ORDER BY post_username
-    #     LIMIT #{@batch_size}
-    #   SQL
-    # end
-
     # MIGRATED morn
     def fetch_categories
       # discourse category = jforum forum
@@ -66,6 +45,7 @@ module ImportScripts::JForum
       SQL
     end
 
+    # MIGRATED morn
     def count_posts
       count(<<-SQL)
         SELECT COUNT(*) AS count
@@ -73,20 +53,26 @@ module ImportScripts::JForum
       SQL
     end
 
+    # MIGRATED morn
     def fetch_posts(last_post_id)
+      # TODO morn t.poll_mx_options)
+
       query(<<-SQL, :post_id)
-        SELECT p.post_id, p.topic_id, t.forum_id, t.topic_title, t.topic_first_post_id, p.poster_id,
-          p.post_text, p.post_time, p.post_username, t.topic_status, t.topic_type, t.poll_title,
-          CASE WHEN t.poll_length > 0 THEN t.poll_start + t.poll_length ELSE NULL END AS poll_end,
-          t.poll_max_options, p.post_attachment
+        SELECT p.post_id, p.topic_id, t.forum_id, t.topic_title,
+          t.topic_first_post_id, p.user_id poster_id,
+          pt.post_text, p.post_time, t.topic_status, t.topic_type,
+          p.attach, v.vote_text, v.vote_start, v.vote_length
         FROM #{@table_prefix}posts p
           JOIN #{@table_prefix}topics t ON (p.topic_id = t.topic_id)
+          JOIN #{@table_prefix}posts_text pt ON (pt.post_id = p.post_id)
+          LEFT OUTER JOIN #{@table_prefix}vote_desc v ON (v.topic_id = t.topic_id)
         WHERE p.post_id > #{last_post_id}
         ORDER BY p.post_id
         LIMIT #{@batch_size}
       SQL
     end
 
+    # MIGRATED morn
     def get_first_post_id(topic_id)
       query(<<-SQL).try(:first).try(:[], :topic_first_post_id)
         SELECT topic_first_post_id
@@ -95,55 +81,39 @@ module ImportScripts::JForum
       SQL
     end
 
+    # MIGRATED morn
     def fetch_poll_options(topic_id)
       query(<<-SQL)
-        SELECT o.poll_option_id, o.poll_option_text, o.poll_option_total AS total_votes,
-          o.poll_option_total - (
-            SELECT COUNT(DISTINCT v.vote_user_id)
-              FROM #{@table_prefix}poll_votes v
-                JOIN #{@table_prefix}users u ON (v.vote_user_id = u.user_id)
-                JOIN #{@table_prefix}topics t ON (v.topic_id = t.topic_id)
-              WHERE v.poll_option_id = o.poll_option_id AND v.topic_id = o.topic_id
-          ) AS anonymous_votes
-        FROM #{@table_prefix}poll_options o
-        WHERE o.topic_id = #{topic_id}
-        ORDER BY o.poll_option_id
-      SQL
-    end
-
-    def fetch_poll_votes(topic_id)
-      # this query ignores invalid votes that belong to non-existent users or topics
-      query(<<-SQL)
-        SELECT u.user_id, v.poll_option_id
-        FROM #{@table_prefix}poll_votes v
-          JOIN #{@table_prefix}poll_options o ON (v.poll_option_id = o.poll_option_id AND v.topic_id = o.topic_id)
-          JOIN #{@table_prefix}users u ON (v.vote_user_id = u.user_id)
+        SELECT o.vote_option_id, o.vote_option_text, o.vote_result AS anonymous_votes
+        FROM #{@table_prefix}vote_results o
+          JOIN #{@table_prefix}vote_desc v ON (v.vote_id = o.vote_id)
           JOIN #{@table_prefix}topics t ON (v.topic_id = t.topic_id)
-        WHERE v.topic_id = #{topic_id}
+        WHERE t.topic_id = #{topic_id}
+        ORDER BY o.vote_option_id
       SQL
     end
 
+    # MIGRATED morn
+    # TODO delete, because JForum supports only anonymous votes
+    def fetch_poll_votes(topic_id)
+      query(<<-SQL)
+        SELECT u.user_id, vr.vote_option_id
+        FROM #{@table_prefix}vote_voters vv
+          JOIN #{@table_prefix}users u ON (vv.vote_user_id = u.user_id)
+          FROM #{@table_prefix}vote_results vr ON (vr.vote_id = vv.vote_id)
+          JOIN #{@table_prefix}topics t ON (vd.topic_id = t.topic_id)
+        WHERE t.topic_id = #{topic_id}
+      SQL
+    end
+
+    # MIGRATED morn
     def get_voters(topic_id)
-      # anonymous voters can't be counted, but lets try to make the count look "correct" anyway
       query(<<-SQL).first
-        SELECT MAX(x.total_voters) AS total_voters,
-          MAX(x.total_voters) - (
-            SELECT COUNT(DISTINCT v.vote_user_id)
-            FROM #{@table_prefix}poll_votes v
-              JOIN #{@table_prefix}poll_options o ON (v.poll_option_id = o.poll_option_id AND v.topic_id = o.topic_id)
-              JOIN #{@table_prefix}users u ON (v.vote_user_id = u.user_id)
-              JOIN #{@table_prefix}topics t ON (v.topic_id = t.topic_id)
-            WHERE v.topic_id = #{topic_id}
-          ) AS anonymous_voters
-        FROM (
-          SELECT COUNT(DISTINCT vote_user_id) AS total_voters
-          FROM #{@table_prefix}poll_votes
-          WHERE topic_id  = #{topic_id}
-          UNION
-          SELECT MAX(poll_option_total) AS total_voters
-          FROM #{@table_prefix}poll_options
-          WHERE topic_id = #{topic_id}
-        ) x
+        SELECT SUM(r.vote_result) AS anonymous_voters
+        FROM #{@table_prefix}vote_results r
+          JOIN #{@table_prefix}vote_desc v ON (v.vote_id = r.vote_id)
+          JOIN #{@table_prefix}topics t ON (v.topic_id = t.topic_id)
+        WHERE t.topic_id = #{topic_id}
       SQL
     end
 
@@ -155,12 +125,16 @@ module ImportScripts::JForum
       SQL
     end
 
+    # MIGRATED morn
     def fetch_attachments(topic_id, post_id)
       query(<<-SQL)
-        SELECT physical_filename, real_filename
-        FROM #{@table_prefix}attachments
-        WHERE topic_id = #{topic_id} AND post_msg_id = #{post_id}
-        ORDER BY filetime DESC, post_msg_id
+        SELECT ad.physical_filename, ad.real_filename
+        FROM #{@table_prefix}attach_desc ad
+          JOIN #{@table_prefix}attach a ON (a.attach_id = ad.attach_id)
+          JOIN #{@table_prefix}posts p ON (p.post_id = a.post_id)
+          JOIN #{@table_prefix}topics t ON (t.topic_id = p.topic_id)
+        WHERE t.topic_id = #{topic_id} AND a.post_id = #{post_id}
+        ORDER BY ad.upload_time DESC, p.post_id
       SQL
     end
 
@@ -216,17 +190,5 @@ module ImportScripts::JForum
         LIMIT #{@batch_size}
       SQL
     end
-
-    # def get_config_values
-    #   query(<<-SQL).first
-    #     SELECT
-    #       (SELECT config_value FROM #{@table_prefix}config WHERE config_name = 'version') AS phpbb_version,
-    #       (SELECT config_value FROM #{@table_prefix}config WHERE config_name = 'avatar_gallery_path') AS avatar_gallery_path,
-    #       (SELECT config_value FROM #{@table_prefix}config WHERE config_name = 'avatar_path') AS avatar_path,
-    #       (SELECT config_value FROM #{@table_prefix}config WHERE config_name = 'avatar_salt') AS avatar_salt,
-    #       (SELECT config_value FROM #{@table_prefix}config WHERE config_name = 'smilies_path') AS smilies_path,
-    #       (SELECT config_value FROM #{@table_prefix}config WHERE config_name = 'upload_path') AS attachment_path
-    #   SQL
-    # end
   end
 end
