@@ -8,8 +8,6 @@ module ImportScripts::JForum
 
       # TODO morn setting
       @uploaded_avatar_path = File.join(settings.base_dir, "images/avatar")
-      # @gallery_path = File.join(settings.base_dir, "images/avatar")
-      # @avatar_salt = phpbb_config[:avatar_salt]
     end
 
     def import_avatar(user, row)
@@ -47,17 +45,12 @@ module ImportScripts::JForum
 
     # MIGRATED morn
     def get_avatar_path(avatar_type, filename)
-      case avatar_type
-      when Constants::AVATAR_TYPE_UPLOADED then
-          # filename.gsub!(/_[0-9]+\./, '.') # we need 1337.jpg, not 1337_2983745.jpg
-          get_uploaded_path(filename)
-      # when Constants::AVATAR_TYPE_GALLERY then
-      #   get_gallery_path(filename)
-      when Constants::AVATAR_TYPE_REMOTE then
+      # avatar_type seems to be not set correctly in JForum, so we parse filename
+      case filename
+      when /https?:\/\/.*/i then
         download_avatar(filename)
-        else
-        Rails.logger.error("Invalid avatar type #{avatar_type}. Skipping...")
-          nil
+      else
+        get_uploaded_path(filename)
       end
     end
 
@@ -89,7 +82,6 @@ module ImportScripts::JForum
     end
 
     def get_uploaded_path(filename)
-      # File.join(@uploaded_avatar_path, "#{@avatar_salt}_#{filename}")
       File.join(@uploaded_avatar_path, "#{filename}")
     end
 
@@ -104,8 +96,6 @@ module ImportScripts::JForum
         @settings.import_uploaded_avatars
       when Constants::AVATAR_TYPE_REMOTE then
         @settings.import_remote_avatars
-      # when Constants::AVATAR_TYPE_GALLERY then
-      #   @settings.import_gallery_avatars
       else
         false
       end
