@@ -47,8 +47,7 @@ module ImportScripts::JForum
       mapped[:title] = get_topic_title(row)
       mapped[:archetype] = Archetype.private_message
       mapped[:target_usernames] = get_recipient_usernames(row)
-      normalized_title = mapped[:title].gsub(/^(Aw:)+/i, "")
-      mapped[:custom_fields] = { import_user_ids: current_user_ids.join(',')+";"+normalized_title }
+      mapped[:custom_fields] = { import_key: get_topic_key(row, current_user_ids) }
 
       if mapped[:target_usernames].empty?
         puts "Private message without recipients. Skipping #{row[:privmsgs_id]}: #{row[:privmsgs_subject][0..40]}"
@@ -85,7 +84,7 @@ module ImportScripts::JForum
 
     # MIGRATED morn
     def get_topic_title(row)
-      CGI.unescapeHTML(row[:privmsgs_subject])
+      CGI.unescapeHTML(row[:privmsgs_subject]).gsub(/^(Aw:|Re:)+/i, "")
     end
 
     # MIGRATED morn
@@ -94,14 +93,20 @@ module ImportScripts::JForum
     end
 
     # MIGRATED morn
-    # Creates a sorted array consisting of the message's author and recipients.
+    # Creates a sorted array consisting of the message's author and recipient.
     def sorted_user_ids(author_id, to_address)
       user_ids = []
-      # get_recipient_user_ids(to_address)
       user_ids << to_address unless to_address.nil?
       user_ids << author_id unless author_id.nil?
       user_ids.uniq!
       user_ids.sort!
+    end
+
+    # MIGRATED morn
+    # Tries to create a key for a private message thread.
+    # Since discourse could change the title, we use also the title.
+    def get_topic_key(row, current_user_ids)
+      "#{current_user_ids.join(',')};#{get_topic_title(row)}"
     end
 
     # TODO morn replace with find_topic_id
@@ -115,13 +120,13 @@ module ImportScripts::JForum
     # Tries to find a Discourse topic (private message) that has the same title as the current message.
     # The users involved in these messages must match too.
     def find_topic_id(row, current_user_ids)
-      topic_title = get_topic_title(row).gsub(/^(Aw:)+/i, "")
+      topic_title = get_topic_title(row)
 
       Post.select(:topic_id)
         .joins(:topic)
         .joins(:_custom_fields)
-        .where(["post_custom_fields.name = 'import_user_ids' AND post_custom_fields.value = :user_ids",
-                { user_ids: current_user_ids.join(',')+";"+topic_title }])
+        .where(["post_custom_fields.name = 'import_key' AND post_custom_fields.value = :key",
+                { key: get_topic_key(row, current_user_ids) }])
         .order('topics.created_at DESC')
         .first.try(:topic_id)
     end
