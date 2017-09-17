@@ -138,55 +138,39 @@ module ImportScripts::JForum
       SQL
     end
 
+    # MIGRATED morn
     def count_messages
       count(<<-SQL)
         SELECT COUNT(*) AS count
         FROM #{@table_prefix}privmsgs m
         WHERE NOT EXISTS ( -- ignore duplicate messages
-            SELECT 1
-            FROM #{@table_prefix}privmsgs x
-            WHERE x.msg_id < m.msg_id AND x.root_level = m.root_level AND x.author_id = m.author_id
-              AND x.to_address = m.to_address AND x.message_time = m.message_time
-          )
+                    SELECT 1
+                    FROM #{@table_prefix}privmsgs x
+                    WHERE x.privmsgs_id < m.privmsgs_id
+                    AND x.privmsgs_subject = m.privmsgs_subject
+                    AND x.privmsgs_from_userid = m.privmsgs_from_userid
+                    AND x.privmsgs_to_userid = m.privmsgs_to_userid AND x.privmsgs_date = m.privmsgs_date
+                  )
       SQL
     end
 
+    # MIGRATED morn
     def fetch_messages(last_msg_id)
-      query(<<-SQL, :msg_id)
-        SELECT m.msg_id, m.root_level AS root_msg_id, m.author_id, m.message_time, m.message_subject,
-          m.message_text, m.to_address, r.author_id AS root_author_id, r.to_address AS root_to_address, (
-            SELECT COUNT(*)
-            FROM #{@table_prefix}attachments a
-            WHERE a.topic_id = 0 AND m.msg_id = a.post_msg_id
-          ) AS attachment_count
+      query(<<-SQL, :privmsgs_id)
+        SELECT DISTINCT m.privmsgs_id, m.privmsgs_from_userid, m.privmsgs_date, m.privmsgs_subject,
+          pt.privmsgs_text, m.privmsgs_to_userid
         FROM #{@table_prefix}privmsgs m
-          LEFT OUTER JOIN #{@table_prefix}privmsgs r ON (m.root_level = r.msg_id)
-        WHERE m.msg_id > #{last_msg_id}
-          AND NOT EXISTS ( -- ignore duplicate messages
-            SELECT 1
-            FROM #{@table_prefix}privmsgs x
-            WHERE x.msg_id < m.msg_id AND x.root_level = m.root_level AND x.author_id = m.author_id
-              AND x.to_address = m.to_address AND x.message_time = m.message_time
-          )
-        ORDER BY m.msg_id
-        LIMIT #{@batch_size}
-      SQL
-    end
-
-    def count_bookmarks
-      count(<<-SQL)
-        SELECT COUNT(*) AS count
-        FROM #{@table_prefix}bookmarks
-      SQL
-    end
-
-    def fetch_bookmarks(last_user_id, last_topic_id)
-      query(<<-SQL, :user_id, :topic_first_post_id)
-        SELECT b.user_id, t.topic_first_post_id
-        FROM #{@table_prefix}bookmarks b
-          JOIN #{@table_prefix}topics t ON (b.topic_id = t.topic_id)
-        WHERE b.user_id > #{last_user_id} AND b.topic_id > #{last_topic_id}
-        ORDER BY b.user_id, b.topic_id
+          JOIN #{@table_prefix}privmsgs_text pt ON (m.privmsgs_id = pt.privmsgs_id)
+        WHERE NOT EXISTS ( -- ignore duplicate messages
+                    SELECT 1
+                    FROM #{@table_prefix}privmsgs x
+                    WHERE x.privmsgs_id < m.privmsgs_id
+                    AND x.privmsgs_subject = m.privmsgs_subject
+                    AND x.privmsgs_from_userid = m.privmsgs_from_userid
+                    AND x.privmsgs_to_userid = m.privmsgs_to_userid AND x.privmsgs_date = m.privmsgs_date
+                  )
+        AND m.privmsgs_id > #{last_msg_id}
+        ORDER BY m.privmsgs_id
         LIMIT #{@batch_size}
       SQL
     end

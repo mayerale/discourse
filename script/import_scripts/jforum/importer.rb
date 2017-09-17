@@ -28,7 +28,7 @@ module ImportScripts::JForum
       import_users
       import_categories
       import_posts
-      #import_private_messages if @settings.import_private_messages
+      import_private_messages if @settings.import_private_messages
       #import_bookmarks if @settings.import_bookmarks
     end
 
