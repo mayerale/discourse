@@ -28,7 +28,6 @@ module ImportScripts::JForum
       }
 
       add_poll_to_custom_fields(mapped_poll[:custom_fields], extracted_poll)
-      #add_votes_to_custom_fields(mapped_poll[:custom_fields], topic_id, poll)
 
       mapped_poll
     end
@@ -105,28 +104,6 @@ module ImportScripts::JForum
     def add_poll_to_custom_fields(custom_fields, extracted_poll)
       custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] = { DiscoursePoll::DEFAULT_POLL_NAME => extracted_poll }
     end
-
-    # TODO delete, because JForum supports only anonymous votes
-    # @param custom_fields [Hash]
-    # @param poll [ImportScripts::JForum::Poll]
-    def add_votes_to_custom_fields(custom_fields, topic_id, poll)
-      rows = @database.fetch_poll_votes(topic_id)
-      votes = {}
-
-      rows.each do |row|
-        option_id = poll.option_id_from_imported_option_id(row[:poll_option_id])
-        user_id = @lookup.user_id_from_imported_user_id(row[:user_id])
-
-        if option_id.present? && user_id.present?
-          user_votes = votes["#{user_id}"] ||= {}
-          user_votes = user_votes[DiscoursePoll::DEFAULT_POLL_NAME] ||= []
-          user_votes << option_id
-        end
-      end
-
-      custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD] = votes
-    end
-  end
 
   class Poll
     attr_reader :title

@@ -56,7 +56,6 @@ module ImportScripts::JForum
       mapped[:title] = CGI.unescapeHTML(row[:topic_title]).strip[0...255]
       mapped[:pinned_at] = mapped[:created_at] unless row[:topic_type] == Constants::POST_NORMAL
       mapped[:views] = row[:topic_views]
-      # TODO morn gibt es nicht?
       mapped[:pinned_globally] = row[:topic_type] == Constants::POST_STICKY || row[:topic_type] == Constants::POST_ANNOUNCE
       mapped[:post_create_action] = proc do |post|
         @permalink_importer.create_for_topic(post.topic, row[:topic_id])

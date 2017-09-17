@@ -43,39 +43,7 @@ module ImportScripts::JForum
       }
     end
 
-    # def map_anonymous_users_to_import_ids(rows)
-    #   rows.map { |row| row[:post_username] }
-    # end
-    #
-    # def map_anonymous_user(row)
-    #   username = row[:post_username]
-    #
-    #   {
-    #     id: username,
-    #     email: "anonymous_#{SecureRandom.hex}@no-email.invalid",
-    #     username: username,
-    #     name: @settings.username_as_name ? username : '',
-    #     created_at: Time.zone.at(row[:first_post_time]),
-    #     active: true,
-    #     trust_level: TrustLevel[0],
-    #     approved: true,
-    #     approved_by_id: Discourse.system_user.id,
-    #     approved_at: Time.now,
-    #     post_create_action: proc do |user|
-    #       row[:user_inactive_reason] = Constants::INACTIVE_MANUAL
-    #       row[:ban_reason] = 'Anonymous user from JForum' # TODO i18n
-    #       suspend_user(user, row, true)
-    #     end
-    #   }
-    # end
-
     protected
-
-    # def parse_birthdate(row)
-    #   return nil if row[:user_birthday].blank?
-    #   birthdate = Date.strptime(row[:user_birthday].delete(' '), '%d-%m-%Y') rescue nil
-    #   birthdate && birthdate.year > 0 ? birthdate : nil
-    # end
 
     # Suspends the user if it is currently banned.
     def suspend_user(user, row, disable_email = false)

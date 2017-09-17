@@ -21,7 +21,6 @@ module ImportScripts::JForum
     # MIGRATED morn
     def map_message(row)
       user_id = @lookup.user_id_from_imported_user_id(row[:privmsgs_from_userid]) || Discourse.system_user.id
-      # attachments = import_attachments(row, user_id)
 
       mapped = {
         id: get_import_id(row[:privmsgs_id]),
@@ -31,7 +30,7 @@ module ImportScripts::JForum
       }
 
       current_user_ids = sorted_user_ids(row[:privmsgs_from_userid], row[:privmsgs_to_userid])
-      topic_id = get_topic_id(row, current_user_ids)
+      topic_id = find_topic_id(row, current_user_ids)
 
       if topic_id.blank?
         map_first_message(row, current_user_ids, mapped)
@@ -62,16 +61,6 @@ module ImportScripts::JForum
       mapped[:topic_id] = topic_id
       mapped
     end
-
-    # def get_recipient_user_ids(to_address)
-    #   return [] if to_address.blank?
-    #
-    #   # to_address looks like this: "u_91:u_1234:u_200"
-    #   # The "u_" prefix is discarded and the rest is a user_id.
-    #   user_ids = to_address.split(':')
-    #   user_ids.uniq!
-    #   user_ids.map! { |u| u[2..-1].to_i }
-    # end
 
     # MIGRATED morn
     def get_recipient_usernames(row)
@@ -107,13 +96,6 @@ module ImportScripts::JForum
     # Since discourse could change the title, we use also the title.
     def get_topic_key(row, current_user_ids)
       "#{current_user_ids.join(',')};#{get_topic_title(row)}"
-    end
-
-    # TODO morn replace with find_topic_id
-    def get_topic_id(row, current_user_ids)
-      ret = find_topic_id(row, current_user_ids)
-      # puts "#{row[:privmsgs_subject]}: [#{ret}]"
-      ret
     end
 
     # MIGRATED morn
