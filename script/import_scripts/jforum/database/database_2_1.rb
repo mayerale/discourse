@@ -58,10 +58,12 @@ module ImportScripts::JForum
       # TODO morn t.poll_mx_options)
 
       query(<<-SQL, :post_id)
-        SELECT p.post_id, p.topic_id, t.forum_id, t.topic_title,
-          t.topic_first_post_id, p.user_id poster_id,
-          pt.post_text, p.post_time, t.topic_status, t.topic_type,
-          p.attach, v.vote_text, v.vote_start, v.vote_length
+        SELECT p.post_id, p.topic_id, p.user_id poster_id,
+          p.post_time, p.attach,
+          pt.post_text,
+          t.forum_id, t.topic_title, t.topic_first_post_id,
+          t.topic_status, t.topic_type, t.topic_views,
+          v.vote_text, v.vote_start, v.vote_length
         FROM #{@table_prefix}posts p
           JOIN #{@table_prefix}topics t ON (p.topic_id = t.topic_id)
           JOIN #{@table_prefix}posts_text pt ON (pt.post_id = p.post_id)

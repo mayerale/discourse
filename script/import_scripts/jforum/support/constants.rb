@@ -9,7 +9,6 @@ module ImportScripts::JForum
     GROUP_ADMINISTRATORS = 'Administration'
     GROUP_MODERATORS = 'Moderatoren'
 
-    # https://wiki.phpbb.com/Table.phpbb_users
     USER_TYPE_NORMAL = 0
     USER_TYPE_INACTIVE = 1
     USER_TYPE_IGNORE = 2
@@ -17,7 +16,6 @@ module ImportScripts::JForum
 
     AVATAR_TYPE_UPLOADED = 0
     AVATAR_TYPE_REMOTE = 1
-    #AVATAR_TYPE_GALLERY = 3
 
     FORUM_TYPE_CATEGORY = 0
     FORUM_TYPE_POST = 1
@@ -30,6 +28,5 @@ module ImportScripts::JForum
     POST_NORMAL = 0
     POST_STICKY = 1
     POST_ANNOUNCE = 2
-    POST_GLOBAL = 3
   end
 end
