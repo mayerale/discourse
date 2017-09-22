@@ -105,6 +105,7 @@ module ImportScripts::JForum
       end
     end
 
+    # MIGRATED morn
     def import_private_messages
       puts '', 'creating private messages'
       total_count = @database.count_messages
