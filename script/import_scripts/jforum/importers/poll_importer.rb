@@ -104,6 +104,7 @@ module ImportScripts::JForum
     def add_poll_to_custom_fields(custom_fields, extracted_poll)
       custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] = { DiscoursePoll::DEFAULT_POLL_NAME => extracted_poll }
     end
+  end
 
   class Poll
     attr_reader :title
