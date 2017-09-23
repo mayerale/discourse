@@ -59,7 +59,7 @@ module ImportScripts::JForum
       mapped[:pinned_globally] = row[:topic_type] == Constants::TOPIC_STICKY || row[:topic_type] == Constants::TOPIC_ANNOUNCE
       mapped[:post_create_action] = proc do |post|
         @permalink_importer.create_for_topic(post.topic, row[:topic_id])
-        @permalink_importer.create_for_post(post, row[:post_id])
+        @permalink_importer.create_for_post(post, row[:topic_id], row[:post_id])
       end
 
       add_poll(row, mapped) if @settings.import_polls
@@ -76,7 +76,7 @@ module ImportScripts::JForum
 
       mapped[:topic_id] = parent[:topic_id]
       mapped[:post_create_action] = proc do |post|
-        @permalink_importer.create_for_post(post, row[:post_id])
+        @permalink_importer.create_for_post(post, row[:topic_id], row[:post_id])
       end
 
       mapped
