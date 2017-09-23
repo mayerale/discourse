@@ -54,9 +54,9 @@ module ImportScripts::JForum
     def map_first_post(row, mapped)
       mapped[:category] = @lookup.category_id_from_imported_category_id(row[:forum_id])
       mapped[:title] = CGI.unescapeHTML(row[:topic_title]).strip[0...255]
-      mapped[:pinned_at] = mapped[:created_at] unless row[:topic_type] == Constants::POST_NORMAL
+      mapped[:pinned_at] = mapped[:created_at] unless row[:topic_type] == Constants::TOPIC_NORMAL
       mapped[:views] = row[:topic_views]
-      mapped[:pinned_globally] = row[:topic_type] == Constants::POST_STICKY || row[:topic_type] == Constants::POST_ANNOUNCE
+      mapped[:pinned_globally] = row[:topic_type] == Constants::TOPIC_STICKY || row[:topic_type] == Constants::TOPIC_ANNOUNCE
       mapped[:post_create_action] = proc do |post|
         @permalink_importer.create_for_topic(post.topic, row[:topic_id])
         @permalink_importer.create_for_post(post, row[:post_id])
