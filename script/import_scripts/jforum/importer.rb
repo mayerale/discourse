@@ -29,7 +29,7 @@ module ImportScripts::JForum
       import_categories
       import_posts
       import_private_messages if @settings.import_private_messages
-      #import_bookmarks if @settings.import_bookmarks
+      import_bookmarks if @settings.import_bookmarks
     end
 
     def change_site_settings
@@ -128,10 +128,10 @@ module ImportScripts::JForum
       puts '', 'creating bookmarks'
       total_count = @database.count_bookmarks
       importer = @importers.bookmark_importer
-      last_user_id = last_topic_id = 0
+      last_user_id = last_bookmark_id = 0
 
       batches do |offset|
-        rows, last_user_id, last_topic_id = @database.fetch_bookmarks(last_user_id, last_topic_id)
+        rows, last_bookmark_id = @database.fetch_bookmarks(last_user_id, last_bookmark_id)
         break if rows.size < 1
 
         create_bookmarks(rows, total: total_count, offset: offset) do |row|

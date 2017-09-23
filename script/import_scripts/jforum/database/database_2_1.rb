@@ -96,19 +96,6 @@ module ImportScripts::JForum
     end
 
     # MIGRATED morn
-    # TODO delete, because JForum supports only anonymous votes
-    def fetch_poll_votes(topic_id)
-      query(<<-SQL)
-        SELECT u.user_id, vr.vote_option_id
-        FROM #{@table_prefix}vote_voters vv
-          JOIN #{@table_prefix}users u ON (vv.vote_user_id = u.user_id)
-          FROM #{@table_prefix}vote_results vr ON (vr.vote_id = vv.vote_id)
-          JOIN #{@table_prefix}topics t ON (vd.topic_id = t.topic_id)
-        WHERE t.topic_id = #{topic_id}
-      SQL
-    end
-
-    # MIGRATED morn
     def get_voters(topic_id)
       query(<<-SQL).first
         SELECT SUM(r.vote_result) AS anonymous_voters
@@ -173,6 +160,29 @@ module ImportScripts::JForum
                   )
         AND m.privmsgs_id > #{last_msg_id}
         ORDER BY m.privmsgs_id
+        LIMIT #{@batch_size}
+      SQL
+    end
+
+    # MIGRATED morn
+    def count_bookmarks
+      count(<<-SQL)
+        SELECT COUNT(*) AS count
+        FROM #{@table_prefix}bookmarks b
+        WHERE b.relation_type = #{Constants::BOOKMARK_TYPE_TOPIC}
+      SQL
+    end
+
+    # MIGRATED morn
+    # user bookmarks and forum bookmarks are not supported by discourse,
+    # we only import topic bookmarks
+    def fetch_bookmarks(last_user_id, last_bookmark_id)
+      query(<<-SQL, :user_id, :bookmark_id)
+        SELECT b.user_id, b.bookmark_id, t.topic_first_post_id AS post_id
+        FROM #{@table_prefix}bookmarks b
+          JOIN #{@table_prefix}topics t ON (b.relation_id = t.topic_id)
+        WHERE b.relation_type = #{Constants::BOOKMARK_TYPE_TOPIC} AND b.user_id > #{last_user_id} AND b.bookmark_id > #{last_bookmark_id}
+        ORDER BY user_id, bookmark_id
         LIMIT #{@batch_size}
       SQL
     end
