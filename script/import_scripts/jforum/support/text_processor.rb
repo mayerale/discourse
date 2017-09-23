@@ -1,3 +1,4 @@
+# TODO morn remove unnecessary functionality
 module ImportScripts::JForum
   class TextProcessor
     # @param lookup [ImportScripts::LookupContainer]
