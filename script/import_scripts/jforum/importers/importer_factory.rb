@@ -50,7 +50,7 @@ module ImportScripts::JForum
     end
 
     def emoji_importer
-      EmojiImporter.new(@database, @uploader, @settings)
+      EmojiImporter.new(@database, @uploader, smiley_processor, @settings)
     end
 
     protected
@@ -72,7 +72,7 @@ module ImportScripts::JForum
     end
 
     def smiley_processor
-      SmileyProcessor.new(@uploader, @settings)
+      @smiley_importer ||= SmileyProcessor.new(@uploader, @settings)
     end
   end
 end

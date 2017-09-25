@@ -3,16 +3,22 @@ module ImportScripts::JForum
     # @param database [ImportScripts::JForum::Database_3_0 | ImportScripts::JForum::Database_3_1]
     # @param uploader [ImportScripts::Uploader]
     # @param settings [ImportScripts::JForum::Settings]
-    def initialize(database, uploader, settings)
+    def initialize(database, uploader, smiley_processor, settings)
       @database = database
       @uploader = uploader
+      @smiley_processor = smiley_processor
 
-      # TODO morn setting
+      # TODO morn settings: path + use mapping?
       @smilies_path = File.join(settings.base_dir, "images/smilies")
     end
 
     def import_emoji(emoji, filename)
-      emoji_name = code.gsub!(/^:(.*):$/, '\1')
+      if @smiley_processor.has_smiley?(emoji)
+        puts "Skipping #{emoji}, because it has a default mapping to emoji #{@smiley_processor.get_emoji(emoji)}"
+        return
+      end
+
+      emoji_name = emoji.gsub(/^:(.*):$/, '\1')
 
       if emoji_name.blank?
         puts "Skipping #{emoji}, because it's not an emoji"
@@ -21,7 +27,7 @@ module ImportScripts::JForum
 
       existing = CustomEmoji.where("LOWER(name) = ?", emoji_name.downcase).first
       if existing
-        puts "Skipping #{emoj}, because it's already existing"
+        puts "Skipping #{emoji}, because it's already existing"
         return
       end
 

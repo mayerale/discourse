@@ -23,6 +23,14 @@ module ImportScripts::JForum
       end
     end
 
+    def has_smiley?(smiley)
+      @smiley_map.has_key?(smiley)
+    end
+
+    def get_emoji(smiley)
+      @smiley_map[smiley]
+    end
+
     protected
 
     def add_default_smilies
