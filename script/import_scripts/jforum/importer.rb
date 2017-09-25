@@ -79,7 +79,7 @@ module ImportScripts::JForum
     # MIGRATED morn
     def import_categories
       puts '', 'creating categories'
-      rows = @database.fetch_forums
+      rows = @database.fetch_categories
       importer = @importers.category_importer
 
       create_categories(rows) do |row|
@@ -164,7 +164,7 @@ module ImportScripts::JForum
         if row.nil?
           skipped += 1
         else
-          emoji = importer.import_emoji(row)
+          emoji = importer.import_emoji(row[:code], row[:disk_name])
           if emoji.nil?
             skipped += 1
           else

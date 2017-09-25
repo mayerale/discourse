@@ -11,49 +11,29 @@ module ImportScripts::JForum
       @smilies_path = File.join(settings.base_dir, "images/smilies")
     end
 
-    # Creates an emoji upload.
-    # Expects path to be the full path and filename of the source file.
-    # @return [Upload]
-    def create_custom_emoji_upload(path, source_filename)
-      tmp = Tempfile.new('discourse-upload')
-      src = File.open(path)
-      FileUtils.copy_stream(src, tmp)
-      src.close
-      tmp.rewind
+    def import_emoji(emoji, filename)
+      emoji_name = code.gsub!(/^:(.*):$/, '\1')
 
-      UploadCreator.new(tmp, source_filename, type: 'custom_emoji').create_for(Discourse::SYSTEM_USER_ID)
-    rescue => e
-      Rails.logger.error("Failed to create custom emoji upload: #{e}")
-      nil
-    ensure
-      tmp.close rescue nil
-      tmp.unlink rescue nil
-    end
-
-    def import_emoji(row)
-      emoji = row[:code].gsub!(/^:(.*):$/, '\1')
-
-      if emoji.blank?
-        puts "Skipped #{row[:code]}, because it's not an emoji"
+      if emoji_name.blank?
+        puts "Skipping #{emoji}, because it's not an emoji"
         return
       end
 
-      existing = CustomEmoji.where("LOWER(name) = ?", emoji.downcase).first
+      existing = CustomEmoji.where("LOWER(name) = ?", emoji_name.downcase).first
       if existing
-        puts "Skipped :#{emoj}:, because it's already existing"
+        puts "Skipping #{emoj}, because it's already existing"
         return
       end
 
-      filename = row[:disk_name]
       path = File.join(@smilies_path, filename)
-      upload = create_custom_emoji_upload(path, filename)
+      upload = @uploader.create_upload(Discourse::SYSTEM_USER_ID, path, filename)
 
       if upload.nil? || !upload.persisted?
         puts "Failed to upload #{path}"
         puts upload.errors.inspect if upload
       else
         new_customemoji = CustomEmoji.new(
-          name: emoji,
+          name: emoji_name,
           upload: upload
         )
         new_customemoji.save!

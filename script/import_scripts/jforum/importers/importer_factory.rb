@@ -50,7 +50,7 @@ module ImportScripts::JForum
     end
 
     def emoji_importer
-      EmojiImporter.new(@database, @lookup, @settings)
+      EmojiImporter.new(@database, @uploader, @settings)
     end
 
     protected
