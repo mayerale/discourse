@@ -34,7 +34,7 @@ module ImportScripts::JForum
         [':o', ':-o', ':eek:'] => ':astonished:',
         [':shock:'] => ':open_mouth:',
         [':?', ':-?', ':???:'] => ':confused:',
-        ['8-)', ':cool:'] => ':sunglasses:',
+        ['8-)', '8)', ':cool:'] => ':sunglasses:',
         [':lol:'] => ':laughing:',
         [':x', ':-x', ':mad:'] => ':angry:',
         [':P', ':-P', ':razz:'] => ':stuck_out_tongue:',
@@ -44,11 +44,10 @@ module ImportScripts::JForum
         [':twisted:'] => ':smiling_imp:',
         [':roll:'] => ':unamused:',
         [':!:'] => ':exclamation:',
-        [':?:'] => ':question:',
+        [':?:', ':?'] => ':question:',
         [':idea:'] => ':bulb:',
         [':arrow:'] => ':arrow_right:',
-        [':|', ':-|'] => ':neutral_face:',
-        [':geek:'] => ':nerd:'
+        [':|', ':-|'] => ':neutral_face:'
       }.each do |smilies, emoji|
         smilies.each { |smiley| @smiley_map[smiley] = emoji }
       end

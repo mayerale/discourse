@@ -27,6 +27,7 @@ module ImportScripts::JForum
 
       import_users
       import_categories
+      import_emojis
       import_posts
       import_private_messages if @settings.import_private_messages
       import_bookmarks if @settings.import_bookmarks
@@ -78,7 +79,7 @@ module ImportScripts::JForum
     # MIGRATED morn
     def import_categories
       puts '', 'creating categories'
-      rows = @database.fetch_categories
+      rows = @database.fetch_forums
       importer = @importers.category_importer
 
       create_categories(rows) do |row|
@@ -138,6 +139,43 @@ module ImportScripts::JForum
           importer.map_bookmark(row)
         end
       end
+    end
+
+    def import_emojis
+      puts '', 'creating custom emojis'
+      total_count = @database.count_smilies
+      last_smilie_id = 0
+
+      batches do |offset|
+        rows, last_smilie_id = @database.fetch_smilies(last_smilie_id)
+        break if rows.size < 1
+
+        create_emojis(rows, total: total_count, offset: offset)
+      end
+    end
+
+    def create_emojis(rows, opts = {})
+      created = 0
+      skipped = 0
+      total = opts[:total] || rows.size
+      importer = @importers.emoji_importer
+
+      rows.each do |row|
+        if row.nil?
+          skipped += 1
+        else
+          emoji = importer.import_emoji(row)
+          if emoji.nil?
+            skipped += 1
+          else
+            created += 1
+          end
+        end
+
+        print_status created + skipped + (opts[:offset] || 0), total
+      end
+
+      [created, skipped]
     end
 
     def update_last_seen_at

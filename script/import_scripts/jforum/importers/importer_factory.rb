@@ -7,6 +7,7 @@ require_relative 'poll_importer'
 require_relative 'post_importer'
 require_relative 'permalink_importer'
 require_relative 'user_importer'
+require_relative 'emoji_importer'
 require_relative '../support/smiley_processor'
 require_relative '../support/text_processor'
 
@@ -46,6 +47,10 @@ module ImportScripts::JForum
 
     def permalink_importer
       @permalink_importer ||= PermalinkImporter.new(@settings.permalinks)
+    end
+
+    def emoji_importer
+      EmojiImporter.new(@database, @lookup, @settings)
     end
 
     protected

@@ -186,5 +186,22 @@ module ImportScripts::JForum
         LIMIT #{@batch_size}
       SQL
     end
+
+    def count_smilies
+      count(<<-SQL)
+        SELECT COUNT(*) AS count
+        FROM #{@table_prefix}smilies s
+      SQL
+    end
+
+    def fetch_smilies(last_smilie_id)
+      query(<<-SQL, :smilie_id)
+        SELECT s.smilie_id, s.code, s.url, s.disk_name
+        FROM #{@table_prefix}smilies s
+        WHERE s.smilie_id > #{last_smilie_id}
+        ORDER BY smilie_id
+        LIMIT #{@batch_size}
+      SQL
+    end
   end
 end
