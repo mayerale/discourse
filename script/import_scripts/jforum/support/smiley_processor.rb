@@ -13,13 +13,8 @@ module ImportScripts::JForum
     end
 
     def replace_smilies(text)
-      # :) is encoded as <!-- s:) --><img src="{SMILIES_PATH}/icon_e_smile.gif" alt=":)" title="Smile" /><!-- s:) -->
-      text.gsub!(/<!-- s(\S+) --><img src="\{SMILIES_PATH\}\/(.+?)" alt="(.*?)" title="(.*?)" \/><!-- s(?:\S+) -->/) do
-        smiley = $1
-
-        @smiley_map.fetch(smiley) do
-          upload_smiley(smiley, $2, $3, $4) || smiley_as_text(smiley)
-        end
+      @smiley_map.each do |smiley, emoji|
+        text.gsub!(/#{Regexp.quote(smiley)}/, emoji)
       end
     end
 
@@ -27,25 +22,25 @@ module ImportScripts::JForum
       @smiley_map.has_key?(smiley)
     end
 
-    def get_emoji(smiley)
-      @smiley_map[smiley]
-    end
-
     protected
 
     def add_default_smilies
       {
+        # these emojis are also supported as translations by discourse
         [':D', ':-D', ':grin:'] => ':smiley:',
         [':)', ':-)', ':smile:'] => ':slight_smile:',
         [';)', ';-)', ':wink:'] => ':wink:',
         [':(', ':-(', ':sad:'] => ':frowning:',
+        [':P', ':-P', ':razz:'] => ':stuck_out_tongue:',
+        [':|', ':-|'] => ':neutral_face:',
+
+        # these emojis are default smilies from JForum
         [':o', ':-o', ':eek:'] => ':astonished:',
         [':shock:'] => ':open_mouth:',
         [':?', ':-?', ':???:'] => ':confused:',
         ['8-)', '8)', ':cool:'] => ':sunglasses:',
         [':lol:'] => ':laughing:',
         [':x', ':-x', ':mad:'] => ':angry:',
-        [':P', ':-P', ':razz:'] => ':stuck_out_tongue:',
         [':oops:'] => ':blush:',
         [':cry:'] => ':cry:',
         [':evil:'] => ':imp:',
@@ -55,44 +50,17 @@ module ImportScripts::JForum
         [':?:', ':?'] => ':question:',
         [':idea:'] => ':bulb:',
         [':arrow:'] => ':arrow_right:',
-        [':|', ':-|'] => ':neutral_face:'
       }.each do |smilies, emoji|
         smilies.each { |smiley| @smiley_map[smiley] = emoji }
       end
     end
 
     def add_configured_smilies(emojis)
+      return if emojis.nil?
       emojis.each do |emoji, smilies|
         Array.wrap(smilies)
           .each { |smiley| @smiley_map[smiley] = ":#{emoji}:" }
       end
-    end
-
-    def upload_smiley(smiley, path, alt_text, title)
-      path = File.join(@smilies_path, path)
-      filename = File.basename(path)
-      upload = @uploader.create_upload(Discourse::SYSTEM_USER_ID, path, filename)
-
-      if upload.nil? || !upload.persisted?
-        puts "Failed to upload #{path}"
-        puts upload.errors.inspect if upload
-        html = nil
-      else
-        html = embedded_image_html(upload, alt_text, title)
-        @smiley_map[smiley] = html
-      end
-
-      html
-    end
-
-    def embedded_image_html(upload, alt_text, title)
-      image_width = [upload.width, SiteSetting.max_image_width].compact.min
-      image_height = [upload.height, SiteSetting.max_image_height].compact.min
-      %Q[<img src="#{upload.url}" width="#{image_width}" height="#{image_height}" alt="#{alt_text}" title="#{title}"/>]
-    end
-
-    def smiley_as_text(smiley)
-      @smiley_map[smiley] = smiley
     end
   end
 end

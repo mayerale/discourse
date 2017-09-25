@@ -14,7 +14,7 @@ module ImportScripts::JForum
 
     def import_emoji(emoji, filename)
       if @smiley_processor.has_smiley?(emoji)
-        puts "Skipping #{emoji}, because it has a default mapping to emoji #{@smiley_processor.get_emoji(emoji)}"
+        puts "Skipping #{emoji}, because it has a default mapping"
         return
       end
 

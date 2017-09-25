@@ -52,11 +52,11 @@ import:
   # When false: the name of each imported user will be blank unless the username was changed during import
   username_as_name: false
 
-  # Map Emojis to smilies used in phpBB. Most of the default smilies already have a mapping, but you can override
+  # Map Emojis to smilies used in JForum. Most of the default smilies already have a mapping, but you can override
   # the mappings here, if you don't like some of them.
-  # The mapping syntax is: emoji_name: 'smiley_in_phpbb'
+  # The mapping syntax is: emoji_name: 'smiley_in_jforum'
   # Or map multiple smilies to one Emoji: emoji_name: ['smiley1', 'smiley2']
   emojis:
     # here are two example mappings...
-    smiley: [':D', ':-D', ':grin:']
-    heart: ':love:'
+    #smiley: [':D', ':-D', ':grin:']
+    #heart: ':love:'
