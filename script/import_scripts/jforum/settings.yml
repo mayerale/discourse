@@ -19,7 +19,7 @@ import:
   # The importer expects to find the /files and /images directories within the base directory.
   # You need to change this to something like /var/lib/tomcat8/webapps/jforum/ if you are not using the Docker based importer.
   # This is only needed if you want to import avatars, attachments or custom smilies.
-  jforum_base_dir: /Users/morn/Sources/discourse/jforum/webapp/
+  jforum_base_dir: /Users/morn/Sources/jforum-migration/webapp/
 
   site_prefix:
     # this is needed for rewriting internal links in posts
