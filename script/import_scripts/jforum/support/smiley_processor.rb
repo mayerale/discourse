@@ -14,7 +14,7 @@ module ImportScripts::JForum
 
     def replace_smilies(text)
       @smiley_map.each do |smiley, emoji|
-        text.gsub!(/#{Regexp.quote(smiley)}/, emoji)
+        text.gsub!(/(^|\b|\s)#{Regexp.quote(smiley)}($|\b|\s)/, "\\1#{emoji}\\2")
       end
     end
 
@@ -26,30 +26,30 @@ module ImportScripts::JForum
 
     def add_default_smilies
       {
+        # these emojis are default smilies from JForum
+        [':shock:'] => ':open_mouth:',
+        [':lol:'] => ':laughing:',
+        [':oops:'] => ':blush:',
+        [':cry:'] => ':cry:',
+        [':evil:'] => ':imp:',
+        [':twisted:'] => ':smiling_imp:',
+        [':roll:'] => ':unamused:',
+        [':idea:'] => ':bulb:',
+        [':arrow:'] => ':arrow_right:',
+        [':!:'] => ':exclamation:',
+        [':o', ':-o', ':eek:'] => ':astonished:',
+        [':?', ':-?', ':???:'] => ':confused:',
+        ['8-)', '8)', ':cool:'] => ':sunglasses:',
+        [':x', ':-x', ':mad:'] => ':angry:',
+        [':?:', ':?'] => ':question:',
+
         # these emojis are also supported as translations by discourse
         [':D', ':-D', ':grin:'] => ':smiley:',
         [':)', ':-)', ':smile:'] => ':slight_smile:',
         [';)', ';-)', ':wink:'] => ':wink:',
         [':(', ':-(', ':sad:'] => ':frowning:',
         [':P', ':-P', ':razz:'] => ':stuck_out_tongue:',
-        [':|', ':-|'] => ':neutral_face:',
-
-        # these emojis are default smilies from JForum
-        [':o', ':-o', ':eek:'] => ':astonished:',
-        [':shock:'] => ':open_mouth:',
-        [':?', ':-?', ':???:'] => ':confused:',
-        ['8-)', '8)', ':cool:'] => ':sunglasses:',
-        [':lol:'] => ':laughing:',
-        [':x', ':-x', ':mad:'] => ':angry:',
-        [':oops:'] => ':blush:',
-        [':cry:'] => ':cry:',
-        [':evil:'] => ':imp:',
-        [':twisted:'] => ':smiling_imp:',
-        [':roll:'] => ':unamused:',
-        [':!:'] => ':exclamation:',
-        [':?:', ':?'] => ':question:',
-        [':idea:'] => ':bulb:',
-        [':arrow:'] => ':arrow_right:',
+        [':|', ':-|'] => ':neutral_face:'
       }.each do |smilies, emoji|
         smilies.each { |smiley| @smiley_map[smiley] = emoji }
       end
