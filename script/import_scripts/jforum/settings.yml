@@ -23,7 +23,7 @@ import:
 
   site_prefix:
     # this is needed for rewriting internal links in posts
-    original: forum.verunsicherung.de/   # without http(s)://
+    original: forum.verunsicherung.de   # without http(s)://
     new: https://forum.verunsicherung.de       # with http:// or https://
 
   # Enable this, if you want to redirect old forum links to the the new locations.
