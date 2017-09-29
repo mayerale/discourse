@@ -14,7 +14,7 @@ module ImportScripts::JForum
 
     def replace_smilies(text)
       @smiley_map.each do |smiley, emoji|
-        text.gsub!(/(^|\b|\s)#{Regexp.quote(smiley)}($|\b|\s)/, "\\1#{emoji}\\2")
+        text.gsub!(/(^|[[:punct:]]|\s)#{Regexp.quote(smiley)}($|[[:punct:]]|\s)/, "\\1#{emoji}\\2")
       end
     end
 
