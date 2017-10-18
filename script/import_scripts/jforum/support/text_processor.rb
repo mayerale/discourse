@@ -84,8 +84,12 @@ module ImportScripts::JForum
       # convert list tags to ul and list=1 tags to ol
       # list=a is not supported, so handle it like list=1
       # list=9 and list=x have the same result as list=1 and list=a
-      text.gsub!(/\[list\](.*?)\[\/list:u\]/mi, '[ul]\1[/ul]')
+      # text.gsub!(/\[list\](.*?)\[\/list:u\]/mi, '[ul]\1[/ul]')
       # text.gsub!(/\[list=.*?\](.*?)\[\/list:o\]/mi, '[ol]\1[/ol]')
+      # text.gsub!(/[\n\s]*?(\[quote.*?\])[\s\n]*?(.*?)[^\n]*?(\[\/quote\])[\n\s]*?/mi, "\n\\1\n\\2\n\\3\n")
+      # text.gsub!(/[\n\s]*?(\[quote.*?\])([^\n]*?)[\n\s]+(\[\/quote\])[\n\s]*?/mi, "\n\\1\n\\2\n\\3\n")
+      text.gsub!(/(\[quote.*?\])/mi, "\n\\1\n")
+      text.gsub!(/(\[\/quote\])/mi, "\n\\1\n")
 
       # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
       # text.gsub!(/\[\*\](.*?)\[\/\*:m\]/mi, '[li]\1[/li]')
@@ -101,7 +105,8 @@ module ImportScripts::JForum
 
     def create_internal_link_regexps(original_site_prefix)
       host = original_site_prefix.gsub('.', '\.')
-      link_regex = "http(?:s)?:\\/\\/#{host}\\/(?:\\S*)(?:posts\\/list\\/(?:\\d+\\/)?(\\d+).page(?:#(\\d+))?)(?:[^\\s\\)\\]]*)"
+      #link_regex = "http(?:s)?:\\/\\/#{host}\\/(?:\\S*)(?:posts\\/list\\/(?:\\d+\\/)?(\\d+).page(?:#(\\d+))?)(?:[^\\s\\)\\]]*)"
+      link_regex = "http(?:s)?:\\/\\/#{host}\\/(?:\\S*)(?:posts\\/list\\/(?:\\d+\\/)?(\\d+).page(?:#(\\d+))?)"
       @internal_link_regexp = Regexp.new(link_regex, Regexp::IGNORECASE)
     end
   end
