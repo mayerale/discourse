@@ -82,12 +82,9 @@ module ImportScripts::JForum
 
     def process_lists(text)
       # convert list tags to ul and list=1 tags to ol
-      # list=a is not supported, so handle it like list=1
-      # list=9 and list=x have the same result as list=1 and list=a
-      # text.gsub!(/\[list\](.*?)\[\/list:u\]/mi, '[ul]\1[/ul]')
-      # text.gsub!(/\[list=.*?\](.*?)\[\/list:o\]/mi, '[ol]\1[/ol]')
-      # text.gsub!(/[\n\s]*?(\[quote.*?\])[\s\n]*?(.*?)[^\n]*?(\[\/quote\])[\n\s]*?/mi, "\n\\1\n\\2\n\\3\n")
-      # text.gsub!(/[\n\s]*?(\[quote.*?\])([^\n]*?)[\n\s]+(\[\/quote\])[\n\s]*?/mi, "\n\\1\n\\2\n\\3\n")
+      text.gsub!(/\[list\](.*?)\[\/list\]/mi, '[ul]\1[/ul]')
+
+      # JForum has a more flexible bbcode syntax, Discourse is more strict
       text.gsub!(/(\[quote.*?\])/mi, "\n\\1\n")
       text.gsub!(/(\[\/quote\])/mi, "\n\\1\n")
 
