@@ -24,6 +24,7 @@ module ImportScripts::JForum
       process_smilies(text)
       process_links(text)
       process_lists(text)
+      process_quotes(text)
 
       text
     end
@@ -81,15 +82,14 @@ module ImportScripts::JForum
     end
 
     def process_lists(text)
-      # convert list tags to ul and list=1 tags to ol
-      text.gsub!(/\[list\](.*?)\[\/list\]/mi, '[ul]\1[/ul]')
+      # convert list tags to markdown lists (bbcode-to-md doesn't recognize it)
+      text.gsub!(/(\n)*?\[list\](.*?)\[\/list\](\n)*?/mi, "\n- \\2\n")
+    end
 
+    def process_quotes(text)
       # JForum has a more flexible bbcode syntax, Discourse is more strict
       text.gsub!(/(\[quote.*?\])/mi, "\n\\1\n")
       text.gsub!(/(\[\/quote\])/mi, "\n\\1\n")
-
-      # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
-      # text.gsub!(/\[\*\](.*?)\[\/\*:m\]/mi, '[li]\1[/li]')
     end
 
     # This appends attachments to the end of the text.
