@@ -25,6 +25,7 @@ module ImportScripts::JForum
       process_links(text)
       process_lists(text)
       process_quotes(text)
+      process_size(text)
 
       text
     end
@@ -59,6 +60,10 @@ module ImportScripts::JForum
       text.gsub!(@internal_link_regexp) do |link|
         replace_internal_link(link, $1, $2)
       end
+    end
+
+    def process_size(text)
+      text.gsub!(/\[size.*?\](.*?)\[\/size\]/mi, '\1')
     end
 
     def replace_internal_link(link, import_topic_id, import_post_id)
