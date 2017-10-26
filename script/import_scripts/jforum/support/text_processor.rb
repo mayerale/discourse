@@ -63,6 +63,7 @@ module ImportScripts::JForum
     end
 
     def process_size(text)
+      # [size] doesn't work, so we just remove it
       text.gsub!(/\[size.*?\](.*?)\[\/size\]/mi, '\1')
     end
 
