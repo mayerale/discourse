@@ -18,6 +18,8 @@ module ImportScripts::JForum
       text = raw.dup
       text = CGI.unescapeHTML(text)
 
+      process_text_looking_like_markdown(text)
+
       if @settings.use_bbcode_to_md
         text = bbcode_to_md(text)
       end
@@ -65,6 +67,12 @@ module ImportScripts::JForum
     def process_size(text)
       # [size] doesn't work, so we just remove it
       text.gsub!(/\[size.*?\](.*?)\[\/size\]/mi, '\1')
+    end
+
+    # Escape text looking like markdown
+    def process_text_looking_like_markdown(text)
+      text.gsub!(/(^|\n)([-*>#_`])/mi, '\1\\\\\\2')
+      text.gsub!(/(^|\n)([0-9]*?)\. /mi, '\1\2\\. ')
     end
 
     def replace_internal_link(link, import_topic_id, import_post_id)
