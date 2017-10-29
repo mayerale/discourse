@@ -57,7 +57,6 @@ module ImportScripts::JForum
       true
     end
 
-    # MIGRATED morn
     def import_users
       puts '', 'creating users'
       total_count = @database.count_users
@@ -76,7 +75,6 @@ module ImportScripts::JForum
       end
     end
 
-    # MIGRATED morn
     def import_categories
       puts '', 'creating categories'
       rows = @database.fetch_categories
@@ -87,7 +85,6 @@ module ImportScripts::JForum
       end
     end
 
-    # MIGRATED morn
     def import_posts
       puts '', 'creating topics and posts'
       total_count = @database.count_posts
@@ -106,7 +103,6 @@ module ImportScripts::JForum
       end
     end
 
-    # MIGRATED morn
     def import_private_messages
       puts '', 'creating private messages'
       total_count = @database.count_messages
