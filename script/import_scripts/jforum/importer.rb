@@ -12,7 +12,6 @@ module ImportScripts::JForum
       super()
 
       @database = database
-      # @php_config = database.get_config_values
       @importers = ImporterFactory.new(@database, @lookup, @uploader, @settings)
     end
 
