@@ -17,7 +17,6 @@ module ImportScripts::JForum
     # @param lookup [ImportScripts::LookupContainer]
     # @param uploader [ImportScripts::Uploader]
     # @param settings [ImportScripts::JForum::Settings]
-    # @param phpbb_config [Hash]
     def initialize(database, lookup, uploader, settings)
       @database = database
       @lookup = lookup
