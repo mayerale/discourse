@@ -50,8 +50,6 @@ module ImportScripts::JForum
     end
 
     def fetch_posts(last_post_id)
-      # TODO morn t.poll_mx_options)
-
       query(<<-SQL, :post_id)
         SELECT p.post_id, p.topic_id, p.user_id poster_id,
           p.post_time, p.attach,
