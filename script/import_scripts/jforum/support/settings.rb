@@ -18,6 +18,7 @@ module ImportScripts::JForum
     attr_reader :import_gallery_avatars
 
     attr_reader :use_bbcode_to_md
+    attr_reader :escape_markdown
 
     attr_reader :original_site_prefix
     attr_reader :new_site_prefix
@@ -29,8 +30,13 @@ module ImportScripts::JForum
 
     attr_reader :database
 
+    attr_reader :groups
+
     def initialize(yaml)
       import_settings = yaml['import']
+
+      @groups = GroupsSettings.new(import_settings['groups'])
+
       @import_attachments = import_settings['attachments']
       @import_private_messages = import_settings['private_messages']
       @import_polls = import_settings['polls']
@@ -43,6 +49,7 @@ module ImportScripts::JForum
       @import_gallery_avatars = avatar_settings['gallery']
 
       @use_bbcode_to_md = import_settings['use_bbcode_to_md']
+      @escape_markdown = import_settings['escape_markdown']
 
       @original_site_prefix = import_settings['site_prefix']['original']
       @new_site_prefix = import_settings['site_prefix']['new']
@@ -87,6 +94,16 @@ module ImportScripts::JForum
       @create_category_links = yaml['categories']
       @create_topic_links = yaml['topics']
       @create_post_links = yaml['posts']
+    end
+  end
+
+  class GroupsSettings
+    attr_reader :administrators
+    attr_reader :moderators
+
+    def initialize(yaml)
+      @administrators = yaml['administrators']
+      @moderators = yaml['moderators']
     end
   end
 end

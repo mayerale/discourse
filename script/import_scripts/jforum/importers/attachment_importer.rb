@@ -1,16 +1,13 @@
-# MIGRATED morn
-
 module ImportScripts::JForum
   class AttachmentImporter
-    # @param database [ImportScripts::JForum::Database_3_0 | ImportScripts::JForum::Database_3_1]
+    # @param database [ImportScripts::JForum::Database_2_1]
     # @param uploader [ImportScripts::Uploader]
     # @param settings [ImportScripts::JForum::Settings]
     def initialize(database, uploader, settings)
       @database = database
       @uploader = uploader
 
-      # TODO morn setting
-      @attachment_path = File.join(settings.base_dir, "upload")
+      @attachment_path = File.join(settings.base_dir, Constants::SUBDIR_UPLOAD)
     end
 
     def import_attachments(user_id, post_id, topic_id = 0)

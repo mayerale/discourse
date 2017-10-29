@@ -6,8 +6,7 @@ module ImportScripts::JForum
       @uploader = uploader
       @settings = settings
 
-      # TODO morn setting
-      @uploaded_avatar_path = File.join(settings.base_dir, "images/avatar")
+      @uploaded_avatar_path = File.join(settings.base_dir, Constants::SUBDIR_AVATARS)
     end
 
     def import_avatar(user, row)
@@ -43,7 +42,6 @@ module ImportScripts::JForum
       is_allowed_avatar_type?(avatar_type) && user.uploaded_avatar_id.blank?
     end
 
-    # MIGRATED morn
     def get_avatar_path(avatar_type, filename)
       # avatar_type seems to be not set correctly in JForum, so we parse filename
       case filename
@@ -89,7 +87,6 @@ module ImportScripts::JForum
       File.join(@gallery_path, filename)
     end
 
-    # MIGRATED morn
     def is_allowed_avatar_type?(avatar_type)
       case avatar_type
       when Constants::AVATAR_TYPE_UPLOADED then

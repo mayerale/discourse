@@ -30,12 +30,11 @@ module ImportScripts::JForum
         approved: is_active_user,
         approved_by_id: is_active_user ? Discourse.system_user.id : nil,
         approved_at: is_active_user ? Time.now : nil,
-        moderator: row[:group_name] == Constants::GROUP_MODERATORS,
-        admin: row[:group_name] == Constants::GROUP_ADMINISTRATORS,
+        moderator: @settings.groups.moderators.include?(row[:group_name]),
+        admin: @settings.groups.administrators.include?(row[:group_name]),
         website: row[:user_website],
         location: row[:user_from],
         bio_raw: row[:user_biography],
-        #date_of_birth: parse_birthdate(row),
         post_create_action: proc do |user|
           suspend_user(user, row)
           @avatar_importer.import_avatar(user, row) if row[:user_avatar].present?

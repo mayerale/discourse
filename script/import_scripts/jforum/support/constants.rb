@@ -6,10 +6,6 @@ module ImportScripts::JForum
     #INACTIVE_MANUAL = 3 # Account deactivated by administrator
     #INACTIVE_REMIND = 4 # Forced user account reactivation
 
-    # TODO morn provide settings
-    GROUP_ADMINISTRATORS = 'Administration'
-    GROUP_MODERATORS = 'Moderatoren'
-
     # TODO morn check all user types
     USER_TYPE_NORMAL = 0
     USER_TYPE_INACTIVE = 1
@@ -26,5 +22,9 @@ module ImportScripts::JForum
     BOOKMARK_TYPE_FORUM = 1
     BOOKMARK_TYPE_TOPIC = 2
     BOOKMARK_TYPE_USER = 3
+
+    SUBDIR_UPLOAD = "upload"
+    SUBDIR_AVATARS = "images/avatar"
+    SUBDIR_SMILIES = "images/smilies"
   end
 end

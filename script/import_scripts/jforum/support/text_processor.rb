@@ -1,7 +1,7 @@
 module ImportScripts::JForum
   class TextProcessor
     # @param lookup [ImportScripts::LookupContainer]
-    # @param database [ImportScripts::JForum::Database_3_0 | ImportScripts::JForum::Database_3_1]
+    # @param database [ImportScripts::JForum::Database_2_1]
     # @param smiley_processor [ImportScripts::JForum::SmileyProcessor]
     # @param settings [ImportScripts::JForum::Settings]
     def initialize(lookup, database, smiley_processor, settings)
@@ -18,7 +18,7 @@ module ImportScripts::JForum
       text = raw.dup
       text = CGI.unescapeHTML(text)
 
-      process_text_looking_like_markdown(text)
+      escape_markdown(text) if @settings.escape_markdown
 
       if @settings.use_bbcode_to_md
         text = bbcode_to_md(text)
@@ -64,13 +64,13 @@ module ImportScripts::JForum
       end
     end
 
+    # Bbcode [size] doesn't work, so we just remove it
     def process_size(text)
-      # [size] doesn't work, so we just remove it
       text.gsub!(/\[size.*?\](.*?)\[\/size\]/mi, '\1')
     end
 
     # Escape text looking like markdown
-    def process_text_looking_like_markdown(text)
+    def escape_markdown(text)
       text.gsub!(/(^|\n)([-*>#_`])/mi, '\1\\\\\\2')
       text.gsub!(/(^|\n)([0-9]*?)\. /mi, '\1\2\\. ')
     end
@@ -95,8 +95,8 @@ module ImportScripts::JForum
       topic ? "#{@new_site_prefix}#{topic[:url]}" : link
     end
 
+    # converts list tags to markdown lists (bbcode-to-md doesn't recognize it)
     def process_lists(text)
-      # convert list tags to markdown lists (bbcode-to-md doesn't recognize it)
       text.gsub!(/(\n)*?\[list\](.*?)\[\/list\](\n)*?/mi, "\n- \\2\n")
     end
 
@@ -116,7 +116,6 @@ module ImportScripts::JForum
 
     def create_internal_link_regexps(original_site_prefix)
       host = original_site_prefix.gsub('.', '\.')
-      #link_regex = "http(?:s)?:\\/\\/#{host}\\/(?:\\S*)(?:posts\\/list\\/(?:\\d+\\/)?(\\d+).page(?:#(\\d+))?)(?:[^\\s\\)\\]]*)"
       link_regex = "http(?:s)?:\\/\\/#{host}\\/(?:\\S*)(?:posts\\/list\\/(?:\\d+\\/)?(\\d+).page(?:#(\\d+))?)"
       @internal_link_regexp = Regexp.new(link_regex, Regexp::IGNORECASE)
     end

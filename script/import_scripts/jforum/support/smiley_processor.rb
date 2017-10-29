@@ -4,8 +4,8 @@ module ImportScripts::JForum
     # @param settings [ImportScripts::JForum::Settings]
     def initialize(uploader, settings)
       @uploader = uploader
-      # TODO morn setting
-      @smilies_path = File.join(settings.base_dir, "images/smilies")
+
+      @smilies_path = File.join(settings.base_dir, Constants::SUBDIR_SMILIES)
 
       @smiley_map = {}
       add_default_smilies

@@ -1,6 +1,6 @@
 module ImportScripts::JForum
   class EmojiImporter
-    # @param database [ImportScripts::JForum::Database_3_0 | ImportScripts::JForum::Database_3_1]
+    # @param database [ImportScripts::JForum::Database_2_1]
     # @param uploader [ImportScripts::Uploader]
     # @param settings [ImportScripts::JForum::Settings]
     def initialize(database, uploader, smiley_processor, settings)
@@ -8,8 +8,7 @@ module ImportScripts::JForum
       @uploader = uploader
       @smiley_processor = smiley_processor
 
-      # TODO morn settings: path + use mapping?
-      @smilies_path = File.join(settings.base_dir, "images/smilies")
+      @smilies_path = File.join(settings.base_dir, Constants::SUBDIR_SMILIES)
     end
 
     def import_emoji(emoji, filename)
