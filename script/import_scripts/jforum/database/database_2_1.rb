@@ -3,7 +3,6 @@ require_relative '../support/constants'
 
 module ImportScripts::JForum
   class Database_2_1 < DatabaseBase
-    # MIGRATED morn
     def count_users
       count(<<-SQL)
         SELECT COUNT(*) AS count
@@ -11,7 +10,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     def fetch_users(last_user_id)
       query(<<-SQL, :user_id)
         SELECT DISTINCT u.user_id, u.user_email, u.username, u.user_password, u.user_regdate, u.user_lastvisit,
@@ -29,7 +27,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     def fetch_categories
       # discourse category = jforum forum
 
@@ -45,7 +42,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     def count_posts
       count(<<-SQL)
         SELECT COUNT(*) AS count
@@ -53,7 +49,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     def fetch_posts(last_post_id)
       # TODO morn t.poll_mx_options)
 
@@ -74,7 +69,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     def get_first_post_id(topic_id)
       query(<<-SQL).try(:first).try(:[], :topic_first_post_id)
         SELECT topic_first_post_id
@@ -83,7 +77,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     def fetch_poll_options(topic_id)
       query(<<-SQL)
         SELECT o.vote_option_id, o.vote_option_text, o.vote_result AS anonymous_votes
@@ -95,7 +88,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     def get_voters(topic_id)
       query(<<-SQL).first
         SELECT SUM(r.vote_result) AS anonymous_voters
@@ -106,7 +98,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     def get_max_attachment_size
       query(<<-SQL).first[:filesize]
         SELECT IFNULL(MAX(filesize), 0) AS filesize
@@ -114,7 +105,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     def fetch_attachments(topic_id, post_id)
       query(<<-SQL)
         SELECT ad.physical_filename, ad.real_filename
@@ -127,7 +117,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     def count_messages
       count(<<-SQL)
         SELECT COUNT(*) AS count
@@ -143,7 +132,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     def fetch_messages(last_msg_id)
       query(<<-SQL, :privmsgs_id)
         SELECT DISTINCT m.privmsgs_id, m.privmsgs_from_userid, m.privmsgs_date, m.privmsgs_subject,
@@ -164,7 +152,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     def count_bookmarks
       count(<<-SQL)
         SELECT COUNT(*) AS count
@@ -173,7 +160,6 @@ module ImportScripts::JForum
       SQL
     end
 
-    # MIGRATED morn
     # user bookmarks and forum bookmarks are not supported by discourse,
     # we only import topic bookmarks
     def fetch_bookmarks(last_user_id, last_bookmark_id)

@@ -1,5 +1,3 @@
-# MIGRATED morn
-
 module ImportScripts::JForum
   class BookmarkImporter
     def map_bookmark(row)

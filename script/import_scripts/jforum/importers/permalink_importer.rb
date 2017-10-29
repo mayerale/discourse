@@ -20,7 +20,6 @@ module ImportScripts::JForum
       SiteSetting.permalink_normalizations = normalizations.join('|')
     end
 
-    # MIGRATED morn
     def create_for_category(category, import_id)
       return unless @settings.create_category_links && category
 
@@ -29,7 +28,6 @@ module ImportScripts::JForum
       Permalink.create(url: url, category_id: category.id) unless permalink_exists(url)
     end
 
-    # MIGRATED morn
     def create_for_topic(topic, import_id)
       return unless @settings.create_topic_links && topic
 
@@ -38,7 +36,6 @@ module ImportScripts::JForum
       Permalink.create(url: url, topic_id: topic.id) unless permalink_exists(url)
     end
 
-    # MIGRATED morn
     def create_for_post(post, import_topic_id, import_post_id)
       return unless @settings.create_post_links && post
 
@@ -49,12 +46,10 @@ module ImportScripts::JForum
 
     protected
 
-    # MIGRATED morn
     def add_normalization(normalizations, normalization)
       normalizations << normalization unless normalizations.include?(normalization)
     end
 
-    # MIGRATED morn
     def permalink_exists(url)
       Permalink.find_by(url: url)
     end

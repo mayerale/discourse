@@ -1,6 +1,6 @@
 module ImportScripts::JForum
   class MessageImporter
-    # @param database [ImportScripts::JForum::Database_3_0 | ImportScripts::JForum::Database_3_1]
+    # @param database [ImportScripts::JForum::Database_2_1]
     # @param lookup [ImportScripts::LookupContainer]
     # @param text_processor [ImportScripts::JForum::TextProcessor]
     # @param attachment_importer [ImportScripts::JForum::AttachmentImporter]
@@ -13,12 +13,10 @@ module ImportScripts::JForum
       @settings = settings
     end
 
-    # MIGRATED morn
     def map_to_import_ids(rows)
       rows.map { |row| get_import_id(row[:privmsgs_id]) }
     end
 
-    # MIGRATED morn
     def map_message(row)
       user_id = @lookup.user_id_from_imported_user_id(row[:privmsgs_from_userid]) || Discourse.system_user.id
 
@@ -41,7 +39,6 @@ module ImportScripts::JForum
 
     protected
 
-    # MIGRATED morn
     def map_first_message(row, current_user_ids, mapped)
       mapped[:title] = get_topic_title(row)
       mapped[:archetype] = Archetype.private_message
@@ -56,13 +53,11 @@ module ImportScripts::JForum
       mapped
     end
 
-    # MIGRATED morn
     def map_other_message(row, topic_id, mapped)
       mapped[:topic_id] = topic_id
       mapped
     end
 
-    # MIGRATED morn
     def get_recipient_usernames(row)
       import_user_ids = [ row[:privmsgs_to_userid] ]
 
@@ -71,17 +66,14 @@ module ImportScripts::JForum
       end.compact
     end
 
-    # MIGRATED morn
     def get_topic_title(row)
       CGI.unescapeHTML(row[:privmsgs_subject]).gsub(/^(Aw:|Re:)+/i, "")
     end
 
-    # MIGRATED morn
     def get_import_id(msg_id)
       "pm:#{msg_id}"
     end
 
-    # MIGRATED morn
     # Creates a sorted array consisting of the message's author and recipient.
     def sorted_user_ids(author_id, to_address)
       user_ids = []
@@ -91,14 +83,12 @@ module ImportScripts::JForum
       user_ids.sort!
     end
 
-    # MIGRATED morn
     # Tries to create a key for a private message thread.
     # Since discourse could change the title, we use also the title.
     def get_topic_key(row, current_user_ids)
       "#{current_user_ids.join(',')};#{get_topic_title(row)}"
     end
 
-    # MIGRATED morn
     # Tries to find a Discourse topic (private message) that has the same title as the current message.
     # The users involved in these messages must match too.
     def find_topic_id(row, current_user_ids)

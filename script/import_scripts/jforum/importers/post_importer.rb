@@ -1,5 +1,3 @@
-# MIGRATED morn
-
 module ImportScripts::JForum
   class PostImporter
     # @param lookup [ImportScripts::LookupContainer]

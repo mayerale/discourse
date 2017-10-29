@@ -1,9 +1,7 @@
-# MIGRATED morn
-
 module ImportScripts::JForum
   class PollImporter
     # @param lookup [ImportScripts::LookupContainer]
-    # @param database [ImportScripts::JForum::Database_3_0 | ImportScripts::JForum::Database_3_1]
+    # @param database [ImportScripts::JForum::Database_2_1]
     # @param text_processor [ImportScripts::JForum::TextProcessor]
     def initialize(lookup, database, text_processor)
       @lookup = lookup

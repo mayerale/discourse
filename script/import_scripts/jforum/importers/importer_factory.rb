@@ -13,7 +13,7 @@ require_relative '../support/text_processor'
 
 module ImportScripts::JForum
   class ImporterFactory
-    # @param database [ImportScripts::JForum::Database_3_0 | ImportScripts::JForum::Database_3_1]
+    # @param database [ImportScripts::JForum::Database_2_1]
     # @param lookup [ImportScripts::LookupContainer]
     # @param uploader [ImportScripts::Uploader]
     # @param settings [ImportScripts::JForum::Settings]

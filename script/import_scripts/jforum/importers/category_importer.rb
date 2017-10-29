@@ -9,7 +9,6 @@ module ImportScripts::JForum
       @permalink_importer = permalink_importer
     end
 
-    # MIGRATED morn
     def map_category(row)
       {
         id: row[:forum_id],
@@ -23,7 +22,6 @@ module ImportScripts::JForum
 
     protected
 
-    # MIGRATED morn
     # @param category [Category]
     def update_category_description(category, row)
       return if row[:forum_desc].blank? && row[:first_post_time].blank?
