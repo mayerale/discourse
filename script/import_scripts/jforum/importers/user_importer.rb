@@ -24,7 +24,7 @@ module ImportScripts::JForum
         name: @settings.username_as_name ? row[:username] : '',
         created_at: Time.zone.at(row[:user_regdate]),
         last_seen_at: row[:user_lastvisit] == nil ? Time.zone.at(row[:user_regdate]) : Time.zone.at(row[:user_lastvisit]),
-        registration_ip_address: (IPAddr.new(row[:user_ip]) rescue nil),
+        registration_ip_address: nil,
         active: is_active_user,
         trust_level: row[:user_posts] == 0 ? TrustLevel[0] : TrustLevel[1],
         approved: is_active_user,
