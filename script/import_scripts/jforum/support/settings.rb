@@ -26,6 +26,7 @@ module ImportScripts::JForum
     attr_reader :permalinks
 
     attr_reader :username_as_name
+    attr_reader :mark_all_topics_as_read
     attr_reader :emojis
 
     attr_reader :database
@@ -57,6 +58,7 @@ module ImportScripts::JForum
       @permalinks = PermalinkSettings.new(import_settings['permalinks'])
 
       @username_as_name = import_settings['username_as_name']
+      @mark_all_topics_as_read = import_settings['mark_all_topics_as_read']
       @emojis = import_settings.fetch('emojis', [])
 
       @database = DatabaseSettings.new(yaml['database'])

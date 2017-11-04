@@ -30,6 +30,7 @@ module ImportScripts::JForum
       import_posts
       import_private_messages if @settings.import_private_messages
       import_bookmarks if @settings.import_bookmarks
+      mark_all_topics_as_read if @settings.mark_all_topics_as_read
     end
 
     def change_site_settings
@@ -171,6 +172,17 @@ module ImportScripts::JForum
       end
 
       [created, skipped]
+    end
+
+    def mark_all_topics_as_read
+      puts '', "marking all topics as read"
+
+      Topic.exec_sql <<~SQL
+        UPDATE topic_users tu
+        SET highest_seen_post_number = t.highest_post_number, last_read_post_number = highest_post_number
+        FROM topics t
+        WHERE t.id = tu.topic_id
+      SQL
     end
 
     def update_last_seen_at
