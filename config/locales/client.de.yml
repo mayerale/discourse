@@ -116,6 +116,7 @@ de:
       split_topic: "Thema aufgeteilt, %{when}"
       invited_user: "%{who} eingeladen, %{when}"
       invited_group: "%{who} eingeladen, %{when}"
+      user_left: "%{who} hat diese Nachricht %{when} hinterlassen"
       removed_user: "%{who} entfernt, %{when}"
       removed_group: "%{who} entfernt, %{when}"
       autoclosed:
@@ -371,6 +372,11 @@ de:
       closed_group: Geschlossene Gruppe
       is_group_user: "Du bist ein Mitglied in dieser Gruppe."
       allow_membership_requests: "Erlaube Benutzern, eine Mitgliedschaftsanfrage an Gruppen-Eigentümer zu senden."
+      membership_request_template: "Benutzerdefinierte Vorlage, das Benutzern angezeigt wird, die eine Mitgliedschaftsanfrage senden"
+      membership_request:
+        submit: "Anfrage abschicken"
+        title: "Anfrage, um @%{group_name} beizutreten"
+        reason: "Lass’ die Gruppenbesitzer wissen, warum du in diese Gruppe gehörst"
       membership: "Mitgliedschaft"
       name: "Name"
       user_count: "Anzahl der Mitglieder"
@@ -397,6 +403,8 @@ de:
         staff: "Gruppenbesitzer und Team"
         owners: "Gruppenbesitzer und Admins"
       alias_levels:
+        mentionable: "Wer kann diese Gruppe @erwähnen?"
+        messageable: "Wer cann dieser Gruppe eine Nachricht schicken?"
         nobody: "Niemand"
         only_admins: "Nur Administratoren"
         mods_and_admins: "Nur Moderatoren und Administratoren"
@@ -484,6 +492,7 @@ de:
       topics_entered: "betrachtete Themen"
       post_count: "# Beiträge"
       confirm_delete_other_accounts: "Bist du sicher, dass du diese Konten löschen willst?"
+      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(wähle eine Option aus)"
     user:
@@ -523,6 +532,7 @@ de:
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
       dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
       theme_default_on_all_devices: "Übernehme dieses Theme für alle meine Geräte."
+      allow_private_messages: "Erlaube anderen Benutzern, mir Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       change: "ändern"
@@ -532,6 +542,7 @@ de:
       admin_tooltip: "Dieser Benutzer ist ein Administrator"
       blocked_tooltip: "Dieser Benutzer wird blockiert."
       suspended_notice: "Dieser Benutzer ist bis zum {{date}} gesperrt."
+      suspended_permanently: "Der Benutzer ist gesperrt."
       suspended_reason: "Grund: "
       github_profile: "Github"
       email_activity_summary: "Aktivitäts-Übersicht"
@@ -628,6 +639,7 @@ de:
         taken: "Entschuldige, diese E-Mail-Adresse ist nicht verfügbar."
         error: "Beim Ändern der E-Mail-Adresse ist ein Fehler aufgetreten. Möglicherweise wird diese Adresse schon benutzt."
         success: "Wir haben eine E-Mail an die angegebene E-Mail-Adresse gesendet. Folge zur Bestätigung der Adresse bitte den darin enthaltenen Anweisungen."
+        success_staff: "Wir haben eine E-Mail an deine aktuelle Adresse geschickt. Bitte folge den Bestätigungsanweisungen."
       change_avatar:
         title: "Ändere dein Profilbild"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basierend auf"
@@ -796,11 +808,11 @@ de:
           one: "Beitrag erstellt"
           other: "Beiträge erstellt"
         likes_given:
-          one: "<i class='fa fa-heart'></i> gegeben"
-          other: "<i class='fa fa-heart'></i> gegeben"
+          one: "gegeben"
+          other: "gegeben"
         likes_received:
-          one: "<i class='fa fa-heart'></i> erhalten"
-          other: "<i class='fa fa-heart'></i> erhalten"
+          one: "vergeben"
+          other: "vergeben"
         days_visited:
           one: "Tag vorbeigekommen"
           other: "Tage vorbeigekommen"
@@ -918,6 +930,7 @@ de:
     private_message_info:
       title: "Nachricht"
       invite: "Andere einladen…"
+      leave_message: "Möchtest du diese Nachricht wirklich verlassen?"
       remove_allowed_user: "Willst du {{name}} wirklich aus dieser Unterhaltung entfernen?"
       remove_allowed_group: "Willst du {{name}} wirklich aus dieser Unterhaltung entfernen?"
     email: 'E-Mail-Adresse'
@@ -1024,6 +1037,10 @@ de:
       shift: 'Umschalt'
       ctrl: 'Strg'
       alt: 'Alt'
+    select_box:
+      default_header_text: Auswählen…
+      no_content: Keine Treffer gefunden
+      filter_placeholder: Suchen…
     emoji_picker:
       filter_placeholder: Emoji suchen
       people: Personen
@@ -1116,10 +1133,6 @@ de:
       olist_title: "Nummerierte Liste"
       ulist_title: "Liste mit Aufzählungszeichen"
       list_item: "Listenelement"
-      heading_label: "Ü"
-      heading_title: "Überschrift"
-      heading_text: "Überschrift"
-      hr_title: "Horizontale Linie"
       help: "Hilfe zur Markdown-Formatierung"
       toggler: "Eingabebereich aus- oder einblenden"
       modal_ok: "OK"
@@ -1135,29 +1148,29 @@ de:
       empty: "Keine Benachrichtigungen gefunden."
       more: "ältere Benachrichtigungen anzeigen"
       total_flagged: "Anzahl der gemeldeten Beiträge"
-      mentioned: "<i title='erwähnt' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      group_mentioned: "<i title='Gruppe erwähnt' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      quoted: "<i title='zitiert' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='geantwortet' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='geantwortet' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title='bearbeitet' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked_2: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      mentioned: "<span>{{username}}</span> {{description}}"
+      group_mentioned: "<span>{{username}}</span> {{description}}"
+      quoted: "<span>{{username}}</span> {{description}}"
+      replied: "<span>{{username}}</span> {{description}}"
+      posted: "<span>{{username}}</span> {{description}}"
+      edited: "<span>{{username}}</span> {{description}}"
+      liked: "<span>{{username}}</span> {{description}}"
+      liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} und 1 anderer</span> {{description}}</p>"
-        other: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} und {{count}} andere</span> {{description}}</p>"
-      private_message: "<i title='Nachricht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='Nachricht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_topic: "<i title='zu Thema eingeladen' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='Einladung angenommen' class='fa fa-user'></i><p><span>{{username}}</span> hat deine Einladung angenommen</p>"
-      moved_post: "<i title='Beitrag verschoben' class='fa fa-sign-out'></i><p><span>{{username}}</span> hat {{description}} verschoben</p>"
-      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='Abzeichen verliehen' class='fa fa-certificate'></i><p>Abzeichen '{{description}}' erhalten</p>"
-      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Neues Thema</span> {{description}}</p>"
+        one: "<span>{{username}}, {{username2}} und jemand anderes</span> {{description}}"
+        other: "<span>{{username}}, {{username2}} und {{count}} andere</span> {{description}}"
+      private_message: "<span>{{username}}</span> {{description}}"
+      invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
+      invited_to_topic: "<span>{{username}}</span> {{description}}"
+      invitee_accepted: "<span>{{username}}</span> hat deine Einladung angenommen"
+      moved_post: "<span>{{username}}</span> hat {{description}} verschoben"
+      linked: "<span>{{username}}</span> {{description}}"
+      granted_badge: "Hat '{{description}}' verliehen bekommen"
+      topic_reminder: "<span>{{username}}</span> {{description}}"
+      watching_first_post: "<span>New Topic</span> {{description}}"
       group_message_summary:
-        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> Eine Nachricht in deinem {{group_name}} Postfach</p>"
-        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} Nachrichten in deinem {{group_name}} Postfach</p>"
+        one: "{{count}} Nachricht in deinem {{group_name}} Posteingang"
+        other: "{{count}} Nachrichten in deinem {{group_name}} Posteingang"
       alt:
         mentioned: "Erwähnt von"
         quoted: "Zitiert von"
@@ -1213,9 +1226,14 @@ de:
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
       searching: "Suche …"
       post_format: "#{{post_number}} von {{username}}"
-      results_page: "Suchergebnisse"
+      results_page: "Suchergebnisse für '{{term}}'"
       more_results: "Es gibt mehr Ergebnisse. Bitte grenze deine Suchkriterien weiter ein."
+      cant_find: "Nicht gefunden, wonach du suchst?"
+      start_new_topic: "Wie wär’s mit einem neuen Thema?"
+      or_search_google: "Oder versuche stattdessen mit Google zu suchen:"
+      search_google: "Versuche stattdessen mit Google zu suchen:"
       search_google_button: "Google"
+      search_google_title: "Durchsuche diese Seite"
       context:
         user: "Beiträge von @{{username}} durchsuchen"
         category: "Kategorie #{{category}} durchsuchen"
@@ -1385,19 +1403,27 @@ de:
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
       topic_status_update:
-        title: "Setzte die Themen-Stoppuhr"
+        title: "Themen-Zeitschaltuhr"
         save: "Stoppuhr setzen"
         num_of_hours: "Stunden:"
         remove: "Stoppuhr löschen"
         publish_to: "Veröffentlichen in:"
         when: "Wann:"
+        public_timer_types: Themen-Zeitschaltuhren
+        private_timer_types: Benutzer-Themen-Zeitschaltuhren
       auto_update_input:
+        none: "Wähle einen Zeitbereich aus"
         later_today: "Im Laufe des Tages"
         tomorrow: "Morgen"
         later_this_week: "Später in dieser Woche"
         this_weekend: "Dieses Wochenende"
         next_week: "Nächste Woche"
+        two_weeks: "Zwei Wochen"
         next_month: "Nächster Monat"
+        three_months: "Drei Monate"
+        six_months: "Sechs Monate"
+        one_year: "Ein Jahr"
+        forever: "Für immer"
         pick_date_and_time: "Datum und Zeit wählen"
         set_based_on_last_post: "Schließen basierend auf dem letzten Beitrag"
       publish_to_category:
@@ -2146,6 +2172,7 @@ de:
         hamburger_menu: '<b>=</b> „Hamburger“-Menü öffnen'
         user_profile_menu: '<b>p</b> Benutzermenü öffnen'
         show_incoming_updated_topics: '<b>.</b> Aktualisierte Themen anzeigen'
+        search: '<b>/</b> oder <b>Strg</b>+<b>Alt</b>+<b>f</b> Suche'
         help: '<b>?</b> Tastaturhilfe öffnen'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Neue/ausgewählte Beiträge ausblenden'
         dismiss_topics: '<b>x</b>, <b>t</b> Themen ausblenden'
@@ -2218,7 +2245,10 @@ de:
       tags: "Schlagwörter"
       choose_for_topic: "Optionale Schlagwörter für dieses Thema wählen"
       delete_tag: "Schlagwört löschen"
-      delete_confirm: "Möchtest du wirklich dieses Schlagwort löschen?"
+      delete_confirm:
+        one: "Bist du sicher, dass du dieses Schlagwort löschen und von einem zugeordneten Thema entfernen möchtest?"
+        other: "Bist du sicher, dass du dieses Schlagwort löschen und von {{count}} zugeordneten Themen entfernen möchtest?"
+      delete_confirm_no_topics: "Bist du sicher, dass du dieses Schlagwort löschen möchtest?"
       rename_tag: "Schlagwort umbenennen"
       rename_instructions: "Neuen Namen für das Schlagwort wählen:"
       sort_by: "Sortieren nach:"
@@ -2346,8 +2376,9 @@ de:
         by: "von"
       flags:
         title: "Meldungen"
-        old: "Alt"
-        active: "Aktiv"
+        active_posts: "Gemeldete Beiträge"
+        old_posts: "Alte gemeldete Beiträge"
+        topics: "Gemeldete Themen"
         agree: "Zustimmen"
         agree_title: "Meldung bestätigen, weil diese gültig und richtig ist"
         agree_flag_modal_title: "Zustimmen und…"
@@ -2375,6 +2406,8 @@ de:
         clear_topic_flags: "Erledigt"
         clear_topic_flags_title: "Das Thema wurde untersucht und Probleme wurden beseitigt. Klicke auf „Erledigt“, um die Meldungen zu entfernen."
         more: "(weitere Antworten…)"
+        suspend_user: "Benutzer sperren"
+        suspend_user_title: "Benutzer für diesen Beitrag sperren"
         dispositions:
           agreed: "zugestimmt"
           disagreed: "abgelehnt"
@@ -2385,27 +2418,24 @@ de:
         system: "System"
         error: "Etwas ist schief gelaufen"
         reply_message: "Antworten"
-        no_results: "Es gibt keine Meldungen."
+        no_results: "Es gibt keine gemeldeten Beiträge."
         topic_flagged: "Dieses <strong>Thema</strong> wurde gemeldet."
+        show_full: "zeige vollständigen Beitrag"
         visit_topic: "Besuche das Thema, um zu reagieren"
         was_edited: "Beitrag wurde nach der ersten Meldung bearbeitet"
         previous_flags_count: "Dieses Thema wurde bereits {{count}} mal gemeldet."
-        summary:
-          action_type_3:
-            one: "„am Thema vorbei“"
-            other: "„am Thema vorbei“ x{{count}}"
-          action_type_4:
-            one: "unangemessen"
-            other: "unangemessen x{{count}}"
-          action_type_6:
-            one: "benutzerdefiniert"
-            other: "benutzerdefiniert x{{count}}"
-          action_type_7:
-            one: "benutzerdefiniert"
-            other: "benutzerdefiniert x{{count}}"
-          action_type_8:
-            one: "Spam"
-            other: "Spam x{{count}}"
+        show_details: "Zeige Meldungsdetails"
+        flagged_topics:
+          topic: "Thema"
+          type: "Art"
+          users: "Benutzer"
+          last_flagged: "Zuletzt gemeldet"
+        short_names:
+          off_topic: "off-topic"
+          inappropriate: "unangemessen"
+          spam: "spam"
+          notify_user: "benutzerdefiniert"
+          notify_moderators: "benutzerdefiniert"
       groups:
         primary: "Hauptgruppe"
         no_primary: "(keine Hauptgruppe)"
@@ -2927,6 +2957,7 @@ de:
         form:
           label: 'Neues Wort:'
           placeholder: 'vollständiges Wort oder * als Platzhalter'
+          placeholder_regexp: "regulärer Ausdruck"
           add: 'Hinzufügen'
           success: 'Erfolg'
           upload: "Hochladen"
@@ -2988,10 +3019,15 @@ de:
         suspend_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen {{error}}"
         unsuspend_failed: "Beim Entsperren dieses Benutzers ist etwas schief gegangen {{error}}"
         suspend_duration: "Wie lange soll dieser Benutzer gesperrt werden?"
-        suspend_duration_units: "(Tage)"
         suspend_reason_label: "Warum sperrst du? Dieser Text ist auf der Profilseite des Benutzers <b>für jeden sichtbar</b> und wird dem Benutzer angezeigt, wenn sich dieser anmelden will. Bitte kurz halten."
+        suspend_reason_hidden_label: "Warum sperrst du? Dieser Text wird dem Benutzer angezeigt, wenn er versucht, sich anzumelden. Fasse dich kurz."
         suspend_reason: "Grund"
+        suspend_reason_placeholder: "Grund der Sperre"
+        suspend_message: "E-Mail-Nachricht"
+        suspend_message_placeholder: "Optional: Gib weitere Informationen über deine Sperrung an und sie wird dem Benutzer per E-Mail geschickt."
         suspended_by: "Gesperrt von"
+        suspended_until: "(bis %{until})"
+        cant_suspend: "Der Benutzer kann nicht gesperrt werden."
         delete_all_posts: "Lösche alle Beiträge"
         delete_all_posts_confirm_MF: "Du wirst {POSTS, plural, one {einen Beitrag} other {# Beiträge}} und {TOPICS, plural, one {ein Thema} other {# Themen}} löschen. Bist du dir sicher?"
         suspend: "Sperren"
@@ -3328,6 +3364,9 @@ de:
       upload: "Hochladen"
       uploading: "Hochladen..."
       quit: "Vielleicht später"
+      staff_count:
+        one: "Deine Community hat ein Team-Mitglied (du)."
+        other: "Deine Community hat %{count} Team-Mitglieder, einschließlich dir."
       invites:
         add_user: "Hinzufügen"
         none_added: "Du hast bisher kein Team eingeladen. Möchtest du wirklich fortfahren?"

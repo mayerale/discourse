@@ -379,8 +379,8 @@ es:
         title: "Grupos"
         empty: "No hay grupos visibles."
       title:
-        one: "grupo"
-        other: "grupos"
+        one: "Grupo"
+        other: "Grupos"
       activity: "Actividad"
       members: "Miembros"
       topics: "Temas"
@@ -530,6 +530,7 @@ es:
       admin_tooltip: "Este usuario es un administrador"
       blocked_tooltip: "El usuario está bloqueado"
       suspended_notice: "Este usuario ha sido suspendido hasta {{date}}."
+      suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Causa: "
       github_profile: "Github"
       email_activity_summary: "Resumen de actividad"
@@ -1023,6 +1024,8 @@ es:
       ctrl: 'Ctrl'
       alt: 'Alt'
     select_box:
+      default_header_text: Seleccionar...
+      no_content: Ningún resultado
       filter_placeholder: Buscar...
     emoji_picker:
       filter_placeholder: Buscar emoji
@@ -1116,10 +1119,6 @@ es:
       olist_title: "Lista numerada"
       ulist_title: "Lista con viñetas"
       list_item: "Lista de ítems"
-      heading_label: "H"
-      heading_title: "Encabezado"
-      heading_text: "Encabezado"
-      hr_title: "Linea Horizontal"
       help: "Ayuda de Edición con Markdown"
       toggler: "ocultar o mostrar el panel de edición"
       modal_ok: "OK"
@@ -1135,29 +1134,11 @@ es:
       empty: "No se han encontrado notificaciones."
       more: "ver notificaciones antiguas"
       total_flagged: "total de posts reportados"
-      mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
-      liked_many:
-        one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} y otro</span> {{description}}</p>"
-        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} y {{count}} otros</span> {{description}}</p>"
-      private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> ha aceptado tu invitación</p>"
-      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> movió {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Se te ha concedido '{{description}}'</p>"
-      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Nuevo Tema</span> {{description}}</p>"
+      topic_reminder: "<span>{{username}}</span> {{description}}"
+      watching_first_post: "<span>Nuevo tema</span> {{description}}"
       group_message_summary:
-        one: "<i title='mensaje en tu bandeja de grupo' class='fa fa-group'></i><p> {{count}} mensaje en la bandeja del grupo {{group_name}}</p>"
-        other: "<i title='mensajes en tu bandeja de grupo' class='fa fa-group'></i><p> {{count}} mensajes en la bandeja del grupo {{group_name}}</p>"
+        one: "{{count}} mensaje en tu bandeja de entrada de {{group_name}}"
+        other: "{{count}} mensajes en tu bandeja de entrada de {{group_name}}"
       alt:
         mentioned: "Mencionado por"
         quoted: "Citado por"
@@ -1402,7 +1383,9 @@ es:
         later_this_week: "Esta misma semana"
         this_weekend: "Este fin de semana"
         next_week: "Semana próxima"
+        two_weeks: "Dos semanas"
         next_month: "Próximo mes"
+        forever: "Siempre"
         pick_date_and_time: "Selecciona fecha y horario"
         set_based_on_last_post: "Cerrar basándose en el último post"
       publish_to_category:
@@ -2355,8 +2338,9 @@ es:
         by: "por"
       flags:
         title: "Reportes"
-        old: "Antiguo"
-        active: "Activo"
+        active_posts: "Posts reportados"
+        old_posts: "Posts reportados antiguos"
+        topics: "Temas reportados"
         agree: "De acuerdo"
         agree_title: "Confirmar esta indicación como válido y correcto."
         agree_flag_modal_title: "Estar de acuerdo y..."
@@ -2384,6 +2368,8 @@ es:
         clear_topic_flags: "Hecho"
         clear_topic_flags_title: "Este tema ha sido investigado y los problemas han sido resueltos. Haz clic en Hecho para eliminar los reportes."
         more: "(más respuestas...)"
+        suspend_user: "Suspender usuario"
+        suspend_user_title: "Suspender usuario por este post"
         dispositions:
           agreed: "coincidió"
           disagreed: "no coincidió"
@@ -2394,11 +2380,18 @@ es:
         system: "Sistema"
         error: "Algo salió mal"
         reply_message: "Responder"
-        no_results: "No hay reportes."
+        no_results: "No hay posts reportados."
         topic_flagged: "Este <strong>tema</strong> ha sido reportado."
+        show_full: "mostrar post completo"
         visit_topic: "Visita el tema para tomar medidas"
         was_edited: "El post fue editado después del primer reporte"
         previous_flags_count: "Este post ya fue marcado {{count}} veces."
+        show_details: "Mostrar detalles del reporte"
+        flagged_topics:
+          topic: "Tema"
+          type: "Tip"
+          users: "Usuarios"
+          last_flagged: "Última vez reportado"
         summary:
           action_type_3:
             one: "fuera de tema"
@@ -2936,6 +2929,7 @@ es:
         form:
           label: 'Nueva palabra:'
           placeholder: 'palabra completa o * como comodín'
+          placeholder_regexp: "expresión regular"
           add: 'Añadir'
           success: 'Añadida correctamente'
           upload: "Subir"
@@ -2997,10 +2991,14 @@ es:
         suspend_failed: "Algo salió mal baneando este usuario {{error}}"
         unsuspend_failed: "Algo salió mal quitando ban a este usuario {{error}}"
         suspend_duration: "¿Cuánto tiempo le gustaría aplicar ban al usuario? (days)"
-        suspend_duration_units: "(días)"
         suspend_reason_label: "¿Por qué lo suspendes? Este texto <b>será visible para todos</b> en la página de perfil del usuario y se mostrará al usuario cuando intente iniciar sesión. Sé conciso."
+        suspend_reason_hidden_label: "¿Por qué estás suspendiendo? Este texto será mostrado al usuario cuando intente iniciar sesión. Mantener corto."
         suspend_reason: "Causa"
+        suspend_reason_placeholder: "Motivo de la suspensión"
+        suspend_message: "Mensaje de email"
+        suspend_message_placeholder: "Opcionalmente, provee más información acerca de la suspensión y será enviada al usuario."
         suspended_by: "Suspendido por"
+        cant_suspend: "Este usuario no puede ser suspendido."
         delete_all_posts: "Eliminar todos los posts"
         delete_all_posts_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {1 post} other {# posts}} y {TOPICS, plural, one {1 topic} other {# topics}}. ¿Seguro?"
         suspend: "Suspender"

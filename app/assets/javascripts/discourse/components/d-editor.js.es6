@@ -1,10 +1,7 @@
 /*global Mousetrap:true */
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
-import Category from 'discourse/models/category';
 import { categoryHashtagTriggerRule } from 'discourse/lib/category-hashtags';
-import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
 import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
-import { SEPARATOR } from 'discourse/lib/category-hashtags';
 import { cookAsync } from 'discourse/lib/text';
 import { translations } from 'pretty-text/emoji/data';
 import { emojiSearch, isSkinTonableEmoji } from 'pretty-text/emoji';
@@ -102,24 +99,6 @@ class Toolbar {
       shortcut: 'Shift+7',
       title: 'composer.olist_title',
       perform: e => e.applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item')
-    });
-
-    this.addButton({
-      id: 'heading',
-      group: 'extras',
-      icon: 'header',
-      label: getButtonLabel('composer.heading_label', 'H'),
-      shortcut: 'Alt+1',
-      perform: e => e.applyList('## ', 'heading_text')
-    });
-
-    this.addButton({
-      id: 'rule',
-      group: 'extras',
-      icon: 'minus',
-      shortcut: 'Alt+R',
-      title: 'composer.hr_title',
-      perform: e => e.addText("\n\n----------\n")
     });
 
     if (site.mobileView) {
@@ -236,7 +215,7 @@ export default Ember.Component.extend({
     const shortcuts = this.get('toolbar.shortcuts');
 
     // for some reason I am having trouble bubbling this so hack it in
-    mouseTrap.bind(['ctrl+shift+s','command+shift+s'], (event) =>{
+    mouseTrap.bind(['ctrl+alt+f'], (event) =>{
       this.appEvents.trigger('header:keyboard-trigger', {type: 'search', event});
       return true;
     });
@@ -322,11 +301,7 @@ export default Ember.Component.extend({
       template: findRawTemplate('category-tag-autocomplete'),
       key: '#',
       transformComplete(obj) {
-        if (obj.model) {
-          return Category.slugFor(obj.model, SEPARATOR);
-        } else {
-          return `${obj.text}${TAG_HASHTAG_POSTFIX}`;
-        }
+        return obj.text;
       },
       dataSource(term) {
         return searchCategoryTag(term, siteSettings);

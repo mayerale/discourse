@@ -61,7 +61,7 @@ describe PostAction do
       topic = posts[0].topic
 
       # Moderators should be invited to the private topic, otherwise they're not permitted to see it
-      topic_user_ids = topic.topic_users(true).map { |x| x.user_id }
+      topic_user_ids = topic.reload.topic_users.map { |x| x.user_id }
       expect(topic_user_ids).to include(codinghorror.id)
       expect(topic_user_ids).to include(mod.id)
 
@@ -506,7 +506,7 @@ describe PostAction do
 
   it "prevents user to act twice at the same time" do
     # flags are already being tested
-    all_types_except_flags = PostActionType.types.except(PostActionType.flag_types)
+    all_types_except_flags = PostActionType.types.except(PostActionType.flag_types_without_custom)
     all_types_except_flags.values.each do |action|
       expect do
         PostAction.act(eviltrout, post, action)

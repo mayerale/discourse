@@ -3,7 +3,6 @@ require 'nokogiri'
 require 'erb'
 require_dependency 'url_helper'
 require_dependency 'excerpt_parser'
-require_dependency 'post'
 require_dependency 'discourse_tagging'
 require_dependency 'pretty_text/helpers'
 
@@ -142,9 +141,9 @@ module PrettyText
         CDN: Rails.configuration.action_controller.asset_host,
       }
 
-      if SiteSetting.enable_s3_uploads?
-        if SiteSetting.s3_cdn_url.present?
-          paths[:S3CDN] = SiteSetting.s3_cdn_url
+      if SiteSetting.Upload.enable_s3_uploads
+        if SiteSetting.Upload.s3_cdn_url.present?
+          paths[:S3CDN] = SiteSetting.Upload.s3_cdn_url
         end
         paths[:S3BaseUrl] = Discourse.store.absolute_base_url
       end
@@ -159,6 +158,7 @@ module PrettyText
         __optInput.getURL = __getURL;
         __optInput.getCurrentUser = __getCurrentUser;
         __optInput.lookupAvatar = __lookupAvatar;
+        __optInput.lookupPrimaryUserGroup = __lookupPrimaryUserGroup;
         __optInput.getTopicInfo = __getTopicInfo;
         __optInput.categoryHashtagLookup = __categoryLookup;
         __optInput.mentionLookup = __mentionLookup;
@@ -251,7 +251,7 @@ module PrettyText
       add_rel_nofollow_to_user_content(doc)
     end
 
-    if SiteSetting.enable_s3_uploads && SiteSetting.s3_cdn_url.present?
+    if SiteSetting.Upload.enable_s3_uploads && SiteSetting.Upload.s3_cdn_url.present?
       add_s3_cdn(doc)
     end
 

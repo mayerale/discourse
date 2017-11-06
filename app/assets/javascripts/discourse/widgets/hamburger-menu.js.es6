@@ -33,17 +33,27 @@ createWidget('priority-faq-link', {
 export default createWidget('hamburger-menu', {
   tagName: 'div.hamburger-panel',
 
-  adminLinks() {
-    const { currentUser } = this;
+  settings: {
+    showCategories: true,
+    maxWidth: 300
+  },
 
-    const links = [{ route: 'admin', className: 'admin-link', icon: 'wrench', label: 'admin_title' },
-                   { href: '/admin/flags/active',
-                     className: 'flagged-posts-link',
-                     icon: 'flag',
-                     label: 'flags_title',
-                     badgeClass: 'flagged-posts',
-                     badgeTitle: 'notifications.total_flagged',
-                     badgeCount: 'site_flagged_posts_count' }];
+  adminLinks() {
+    const { currentUser, siteSettings } = this;
+    let flagsPath = siteSettings.flags_default_topics ? 'topics' : 'active';
+
+    const links = [
+      { route: 'admin', className: 'admin-link', icon: 'wrench', label: 'admin_title' },
+      {
+        href: `/admin/flags/${flagsPath}`,
+        className: 'flagged-posts-link',
+        icon: 'flag',
+        label: 'flags_title',
+        badgeClass: 'flagged-posts',
+        badgeTitle: 'notifications.total_flagged',
+        badgeCount: 'site_flagged_posts_count'
+      }
+    ];
 
     if (currentUser.show_queued_posts) {
       links.push({ route: 'queued-posts',
@@ -120,7 +130,7 @@ export default createWidget('hamburger-menu', {
     const hideUncategorized = !this.siteSettings.allow_uncategorized_topics;
     const isStaff = Discourse.User.currentProp('staff');
 
-    const categories = Discourse.Category.list().reject((c) => {
+    const categories = this.site.get('categoriesList').reject((c) => {
       if (c.get('parentCategory.show_subcategory_list')) { return true; }
       if (hideUncategorized && c.get('isUncategorizedCategory') && !isStaff) { return true; }
       return false;
@@ -176,15 +186,22 @@ export default createWidget('hamburger-menu', {
     }
 
     results.push(this.attach('menu-links', {name: 'general-links', contents: () => this.generalLinks() }));
-    results.push(this.listCategories());
-    results.push(h('hr'));
+
+    if (this.settings.showCategories) {
+      results.push(this.listCategories());
+      results.push(h('hr'));
+    }
+
     results.push(this.attach('menu-links', {name: 'footer-links', omitRule: true, contents: () => this.footerLinks(prioritizeFaq, faqUrl) }));
 
     return results;
   },
 
   html() {
-    return this.attach('menu-panel', { contents: () => this.panelContents() });
+    return this.attach('menu-panel', {
+      contents: () => this.panelContents(),
+      maxWidth: this.settings.maxWidth,
+    });
   },
 
   clickOutside() {

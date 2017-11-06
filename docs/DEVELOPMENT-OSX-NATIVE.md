@@ -114,7 +114,7 @@ unix_socket_directories = '/var/pgsql_socket'   # comma-separated list of direct
 #and
 unix_socket_permissions = 0777  # begin with 0 to use octal notation
 ```
-Then create the '/var/pgsql/' folder and set up the appropriate permission in your bash (this requires admin access)
+Then create the '/var/pgsql_socket/' folder and set up the appropriate permission in your bash (this requires admin access)
 ```
 sudo mkdir /var/pgsql_socket
 sudo chmod 770 /var/pgsql_socket
@@ -257,10 +257,13 @@ bundle install
 
 ### Prepare your database
 ```sh
-rake db:create
-rake db:migrate
-rake db:test:prepare
-rake db:seed_fu
+# run this if there was a pre-existing database
+bundle exec rake db:drop
+RAILS_ENV=test bundle exec rake db:drop
+
+# time to create the database and run migrations
+bundle exec rake db:create db:migrate
+RAILS_ENV=test bundle exec rake db:create db:migrate
 ```
 
 ## Now, test it out!

@@ -112,6 +112,7 @@ class TopicQuery
             ON topic_allowed_groups.group_id = gu.group_id
             AND user_id = #{@user.id.to_i}
           ")
+          .where("gu.group_id IS NOT NULL")
           .pluck(:group_id)
 
         {
@@ -265,9 +266,7 @@ class TopicQuery
 
   def list_category_topic_ids(category)
     query = default_results(category: category.id)
-    pinned_ids = query.where('pinned_at IS NOT NULL AND category_id = ?', category.id)
-      .limit(nil)
-      .order('pinned_at DESC').pluck(:id)
+    pinned_ids = query.where('pinned_at IS NOT NULL AND category_id = ?', category.id).limit(nil).order('pinned_at DESC').pluck(:id)
     non_pinned_ids = query.where('pinned_at IS NULL OR category_id <> ?', category.id).pluck(:id)
     (pinned_ids + non_pinned_ids)
   end
@@ -289,8 +288,9 @@ class TopicQuery
 
     list
       .where("tu.last_read_post_number < topics.#{col_name}")
-      .where("COALESCE(tu.notification_level, :regular) >= :tracking",
-               regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
+      .where("tu.notification_level >= :tracking",
+        tracking: TopicUser.notification_levels[:tracking]
+      )
   end
 
   def prioritize_pinned_topics(topics, options)
@@ -310,7 +310,7 @@ class TopicQuery
     if page == 0
       (pinned_topics + unpinned_topics)[0...limit] if limit
     else
-      offset = (page * per_page) - pinned_topics.count
+      offset = (page * per_page) - pinned_topics.length
       offset = 0 unless offset > 0
       unpinned_topics.offset(offset).to_a
     end
@@ -370,6 +370,10 @@ class TopicQuery
     result
   end
 
+  def unread_results_redis_key
+    "last_unread_result_bumped_at:#{@user.id}"
+  end
+
   def unread_results(options = {})
     result = TopicQuery.unread_filter(
         default_results(options.reverse_merge(unordered: true)),
@@ -381,6 +385,17 @@ class TopicQuery
       result = filter_callback.call(:unread, result, @user, options)
     end
 
+    if !(last_bumped_at = $redis.get(unread_results_redis_key))
+      last_bumped_at = result.unscope(:limit, :order).order(:bumped_at).first&.bumped_at
+
+      $redis.setex(
+        unread_results_redis_key,
+        1.hour.to_i,
+        (last_bumped_at || Time.zone.now).to_s
+      )
+    end
+
+    result = result.where("topics.bumped_at >= ?", last_bumped_at) if last_bumped_at
     suggested_ordering(result, options)
   end
 
@@ -558,7 +573,7 @@ class TopicQuery
           end
         elsif @options[:no_tags]
           # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
-          result = result.where.not(id: TopicTag.select(:topic_id).uniq)
+          result = result.where.not(id: TopicTag.distinct.pluck(:topic_id))
         end
       end
 
@@ -575,7 +590,6 @@ class TopicQuery
       end
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
-
       result = result.visible if options[:visible]
       result = result.where.not(topics: { id: options[:except_topic_ids] }).references(:topics) if options[:except_topic_ids]
 
@@ -729,10 +743,8 @@ class TopicQuery
     end
 
     def new_messages(params)
-
       TopicQuery.new_filter(messages_for_groups_or_user(params[:my_group_ids]), Time.at(SiteSetting.min_new_topics_time).to_datetime)
         .limit(params[:count])
-
     end
 
     def unread_messages(params)
@@ -794,7 +806,7 @@ class TopicQuery
               LEFT JOIN group_users gu
               ON gu.user_id = #{@user.id.to_i}
               AND gu.group_id = _tg.group_id
-              AND gu.group_id IN (#{sanitize_sql_array(group_ids)})
+              WHERE gu.group_id IN (#{sanitize_sql_array(group_ids)})
             ) tg ON topics.id = tg.topic_id
           ")
           .where("tg.topic_id IS NOT NULL")

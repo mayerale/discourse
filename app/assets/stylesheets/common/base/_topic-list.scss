@@ -8,14 +8,7 @@
 }
 
 .list-controls {
-  #navigation-bar {
-    .has-icon span:before {
-      margin-right: 4px;
-      font: 1.071em/0.9 "FontAwesome";
-    }
-  }
-
-  .select-box {
+  .select-box-kit {
     align-self: center;
 
     &.categories-admin-dropdown, &.category-notifications-button, &.tag-notifications-button {
@@ -25,11 +18,9 @@
   }
 }
 
-html.anon .topic-list,
 .topic-list-item.visited,
 .latest-topic-list-item.visited,
-.category-topic-link.visited,
-#suggested-topics .topic-list tr.visited {
+.category-topic-link.visited {
   a.title:not(.badge-notification) { color: $primary-medium; }
 }
 
@@ -76,7 +67,7 @@ html.anon .topic-list,
     border: none;
 
     td {
-      border-bottom: 1px solid scale-color($danger, $lightness: 60%);
+      border-bottom: 1px solid $danger-low;
       line-height: 0.1em;
       padding: 0px;
       text-align: center;
@@ -84,7 +75,7 @@ html.anon .topic-list,
 
     td span {
       background-color: $secondary;
-      color: scale-color($danger, $lightness: 60%);
+      color: $danger-low;
       padding: 0px 8px;
       font-size: 0.929em;
     }
@@ -102,14 +93,14 @@ html.anon .topic-list,
 
   }
   th {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
     font-size: 1em;
-    button .d-icon {color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));}
+    button .d-icon {color: dark-light-choose($primary-medium, $secondary-medium);}
 
   }
   td {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     font-size: 1em;
   }
 
@@ -124,7 +115,7 @@ html.anon .topic-list,
   .topic-excerpt {
     font-size: 0.929em;
     margin-top: 8px;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     word-wrap: break-word;
     line-height: 1.4;
     padding-right: 20px;
@@ -169,7 +160,7 @@ html.anon .topic-list,
 
   .category .badge-notification {
     background-color:transparent;
-    color: scale-color($primary, $lightness: 50%);
+    color: $primary-medium;
   }
 
   .subcategories .badge {
@@ -226,7 +217,7 @@ html.anon .topic-list,
     background-color: transparent;
     padding: 0;
     border: 0;
-    color: scale-color($danger, $lightness: 20%);
+    color: $danger-medium;
     font-size: 0.929em;
     cursor: default;
   }
@@ -311,7 +302,7 @@ ol.category-breadcrumb {
   }
 
   .top-date-string {
-    color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+    color: dark-light-choose($primary-medium, $secondary-high);
     font-weight: normal;
     text-transform: uppercase;
   }
@@ -371,12 +362,12 @@ ol.category-breadcrumb {
 }
 
 div.education {
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  color: dark-light-choose($primary-medium, $secondary-medium);
 }
 
 .list-cell {
   padding: 12px 5px;
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+  color: dark-light-choose($primary-medium, $secondary-high);
 }
 
 .table-heading {

@@ -30,7 +30,7 @@ class Group < ActiveRecord::Base
   after_save :update_title
 
   after_save :enqueue_update_mentions_job,
-    if: Proc.new { |g| g.name_was && g.name_changed? }
+    if: Proc.new { |g| g.name_before_last_save && g.saved_change_to_name? }
 
   after_save :expire_cache
   after_destroy :expire_cache
@@ -185,7 +185,8 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def posts_for(guardian, before_post_id = nil)
+  def posts_for(guardian, opts = nil)
+    opts ||= {}
     user_ids = group_users.map { |gu| gu.user_id }
     result = Post.includes(:user, :topic, topic: :category)
       .references(:posts, :topics, :category)
@@ -193,24 +194,35 @@ class Group < ActiveRecord::Base
       .where('topics.archetype <> ?', Archetype.private_message)
       .where(post_type: Post.types[:regular])
 
+    if opts[:category_id].present?
+      result = result.where('topics.category_id = ?', opts[:category_id].to_i)
+    end
+
     result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[:before_post_id]
     result.order('posts.created_at desc')
   end
 
-  def messages_for(guardian, before_post_id = nil)
+  def messages_for(guardian, opts = nil)
+    opts ||= {}
+
     result = Post.includes(:user, :topic, topic: :category)
       .references(:posts, :topics, :category)
       .where('topics.archetype = ?', Archetype.private_message)
       .where(post_type: Post.types[:regular])
       .where('topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)', self.id)
 
+    if opts[:category_id].present?
+      result = result.where('topics.category_id = ?', opts[:category_id].to_i)
+    end
+
     result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[:before_post_id]
     result.order('posts.created_at desc')
   end
 
-  def mentioned_posts_for(guardian, before_post_id = nil)
+  def mentioned_posts_for(guardian, opts = nil)
+    opts ||= {}
     result = Post.joins(:group_mentions)
       .includes(:user, :topic, topic: :category)
       .references(:posts, :topics, :category)
@@ -218,8 +230,12 @@ class Group < ActiveRecord::Base
       .where(post_type: Post.types[:regular])
       .where('group_mentions.group_id = ?', self.id)
 
+    if opts[:category_id].present?
+      result = result.where('topics.category_id = ?', opts[:category_id].to_i)
+    end
+
     result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[:before_post_id]
     result.order('posts.created_at desc')
   end
 
@@ -307,6 +323,7 @@ class Group < ActiveRecord::Base
   def self.ensure_consistency!
     reset_all_counters!
     refresh_automatic_groups!
+    refresh_has_messages!
   end
 
   def self.reset_all_counters!
@@ -330,6 +347,18 @@ class Group < ActiveRecord::Base
     args.each { |group| refresh_automatic_group!(group) }
   end
 
+  def self.refresh_has_messages!
+    exec_sql <<-SQL
+      UPDATE groups g SET has_messages = false
+      WHERE NOT EXISTS (SELECT tg.id
+                          FROM topic_allowed_groups tg
+                    INNER JOIN topics t ON t.id = tg.topic_id
+                         WHERE tg.group_id = g.id
+                           AND t.deleted_at IS NULL)
+      AND g.has_messages = true
+    SQL
+  end
+
   def self.ensure_automatic_groups!
     AUTO_GROUPS.each_key do |name|
       refresh_automatic_group!(name) unless lookup_group(name)
@@ -340,9 +369,9 @@ class Group < ActiveRecord::Base
     lookup_group(name) || refresh_automatic_group!(name)
   end
 
-  def self.search_group(name)
-    Group.where(visibility_level: visibility_levels[:public]).where(
-      "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "#{name}%"
+  def self.search_groups(name, groups: nil)
+    (groups || Group).where(
+      "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "%#{name}%"
     )
   end
 
@@ -552,7 +581,7 @@ class Group < ActiveRecord::Base
     def update_title
       return if new_record? && !self.title.present?
 
-      if self.title_changed?
+      if self.saved_change_to_title?
         sql = <<-SQL.squish
           UPDATE users
              SET title = :title
@@ -561,14 +590,14 @@ class Group < ActiveRecord::Base
              AND id IN (SELECT user_id FROM group_users WHERE group_id = :id)
         SQL
 
-        self.class.exec_sql(sql, title: title, title_was: title_was, id: id)
+        self.class.exec_sql(sql, title: title, title_was: title_before_last_save, id: id)
       end
     end
 
     def update_primary_group
       return if new_record? && !self.primary_group?
 
-      if self.primary_group_changed?
+      if self.saved_change_to_primary_group?
         sql = <<~SQL
           UPDATE users
           /*set*/
@@ -613,7 +642,7 @@ class Group < ActiveRecord::Base
 
     def enqueue_update_mentions_job
       Jobs.enqueue(:update_group_mentions,
-        previous_name: self.name_was,
+        previous_name: self.name_before_last_save,
         group_id: self.id
       )
     end

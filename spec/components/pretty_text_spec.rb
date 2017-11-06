@@ -113,6 +113,34 @@ describe PrettyText do
       end
     end
 
+    describe "with primary user group" do
+      let(:default_avatar) { "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png" }
+      let(:group) { Fabricate(:group) }
+      let!(:user) { Fabricate(:user, primary_group: group) }
+
+      before do
+        User.stubs(:default_template).returns(default_avatar)
+      end
+
+      it "adds primary group class to referenced users quote" do
+
+        topic = Fabricate(:topic, title: "this is a test topic")
+        expected = <<~HTML
+          <aside class="quote group-#{group.name}" data-topic="#{topic.id}" data-post="2">
+          <div class="title">
+            <div class="quote-controls"></div>
+            <img alt class='avatar' height='20' src='//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png' width='20'><a href='http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2'>This is a test topic</a>
+          </div>
+          <blockquote>
+            <p>ddd</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        expect(cook("[quote=\"#{user.username}, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
+      end
+    end
+
     it "can handle inline block bbcode" do
       cooked = PrettyText.cook("[quote]te **s** t[/quote]")
 
@@ -623,29 +651,56 @@ describe PrettyText do
     expect(PrettyText.cook(raw)).to eq(html.strip)
   end
 
-  it 'can substitute s3 cdn correctly' do
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_access_key_id = "XXX"
-    SiteSetting.s3_secret_access_key = "XXX"
-    SiteSetting.s3_upload_bucket = "test"
-    SiteSetting.s3_cdn_url = "https://awesome.cdn"
+  describe 's3_cdn' do
 
-    # add extra img tag to ensure it does not blow up
-    raw = <<~HTML
-      <img>
-      <img src='https:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
-      <img src='http:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
-      <img src='#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
-    HTML
+    def test_s3_cdn
+      # add extra img tag to ensure it does not blow up
+      raw = <<~HTML
+        <img>
+        <img src='https:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+        <img src='http:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+        <img src='#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+      HTML
 
-    html = <<~HTML
-      <p><img><br>
-      <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>
-      <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>
-      <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"></p>
-    HTML
+      html = <<~HTML
+        <p><img><br>
+        <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>
+        <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>
+        <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"></p>
+      HTML
 
-    expect(PrettyText.cook(raw)).to eq(html.strip)
+      expect(PrettyText.cook(raw)).to eq(html.strip)
+    end
+
+    before do
+      GlobalSetting.reset_s3_cache!
+    end
+
+    after do
+      GlobalSetting.reset_s3_cache!
+    end
+
+    it 'can substitute s3 cdn when added via global setting' do
+
+      global_setting :s3_access_key_id, 'XXX'
+      global_setting :s3_secret_access_key, 'XXX'
+      global_setting :s3_bucket, 'XXX'
+      global_setting :s3_region, 'XXX'
+      global_setting :s3_cdn_url, 'https://awesome.cdn'
+
+      test_s3_cdn
+    end
+
+    it 'can substitute s3 cdn correctly' do
+      SiteSetting.s3_access_key_id = "XXX"
+      SiteSetting.s3_secret_access_key = "XXX"
+      SiteSetting.s3_upload_bucket = "test"
+      SiteSetting.s3_cdn_url = "https://awesome.cdn"
+
+      SiteSetting.enable_s3_uploads = true
+
+      test_s3_cdn
+    end
   end
 
   describe "emoji" do
@@ -717,16 +772,22 @@ describe PrettyText do
     expect(cooked).to eq(n expected)
   end
 
-  it "produces tag links" do
+  it "produces hashtag links" do
+    category = Fabricate(:category, name: 'testing')
+    category2 = Fabricate(:category, name: 'known')
     Fabricate(:topic, tags: [Fabricate(:tag, name: 'known')])
 
-    cooked = PrettyText.cook(" #unknown::tag #known::tag")
+    cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing")
 
-    html = <<~HTML
-      <p><span class=\"hashtag\">#unknown::tag</span> <a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a></p>
-    HTML
+    [
+      "<span class=\"hashtag\">#unknown::tag</span>",
+      "<a class=\"hashtag\" href=\"#{category2.url_with_id}\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"#{category.url_with_id}\">#<span>testing</span></a>"
+    ].each do |element|
 
-    expect(cooked).to eq(html.strip)
+      expect(cooked).to include(element)
+    end
 
     cooked = PrettyText.cook("[`a` #known::tag here](http://somesite.com)")
 

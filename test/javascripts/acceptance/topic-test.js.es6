@@ -53,9 +53,9 @@ QUnit.test("Updating the topic title and category", assert => {
 
   fillIn('#edit-title', 'this is the new title');
 
-  expandSelectBox('.title-wrapper .category-select-box');
+  expandSelectBox('.title-wrapper .category-chooser');
 
-  selectBoxSelectRow(4, {selector: '.title-wrapper .category-select-box'});
+  selectBoxSelectRow(4, {selector: '.title-wrapper .category-chooser'});
 
   click('#topic-title .submit-edit');
 
@@ -103,7 +103,7 @@ QUnit.test("Reply as new topic", assert => {
       "it fills composer with the ring string"
     );
     assert.equal(
-      selectBox('.category-select-box').header.text(), "feature",
+      selectBox('.category-chooser').header.name(), "feature",
       "it fills category selector with the right category"
     );
   });
@@ -138,6 +138,26 @@ QUnit.test("Reply as new message", assert => {
     assert.equal(
       $(targets[2]).text(), "Group",
       "it fills up the composer with the right group to start the PM to"
+    );
+  });
+});
+
+QUnit.test("Visit topic routes", assert => {
+  visit("/t/12");
+
+  andThen(() => {
+    assert.equal(
+      find('.fancy-title').text().trim(), 'PM for testing',
+      'it routes to the right topic'
+    );
+  });
+
+  visit("/t/280/20");
+
+  andThen(() => {
+    assert.equal(
+      find('.fancy-title').text().trim(), 'Internationalization / localization',
+      'it routes to the right topic'
     );
   });
 });

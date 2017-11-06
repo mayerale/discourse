@@ -1,4 +1,5 @@
 require_dependency 'version'
+require_dependency 'site_setting'
 
 module DiscourseHub
 
@@ -16,8 +17,6 @@ module DiscourseHub
   def self.stats_fetched_at=(time_with_zone)
     $redis.set STATS_FETCHED_AT_KEY, time_with_zone.to_i
   end
-
-  private
 
   def self.get_payload
     SiteSetting.share_anonymized_statistics && stats_fetched_at < 7.days.ago ? About.fetch_cached_stats.symbolize_keys : {}

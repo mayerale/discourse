@@ -2,6 +2,7 @@ require 'rails_helper'
 require_dependency 'user'
 
 describe User do
+  let(:user) { Fabricate(:user) }
 
   context 'validations' do
     it { is_expected.to validate_presence_of :username }
@@ -66,7 +67,7 @@ describe User do
     end
 
     it "doesn't enqueue the system message when the site settings disable it" do
-      SiteSetting.expects(:send_welcome_message?).returns(false)
+      SiteSetting.send_welcome_message = false
       Jobs.expects(:enqueue).with(:send_system_message, user_id: user.id, message_type: 'welcome_user').never
       user.enqueue_welcome_message('welcome_user')
     end
@@ -90,15 +91,12 @@ describe User do
       user.approve(admin)
     end
 
-    it 'triggers extensibility events' do
+    it 'triggers a extensibility event' do
       user && admin # bypass the user_created event
-      user_updated_event, user_approved_event = DiscourseEvent.track_events { user.approve(admin) }
+      event = DiscourseEvent.track_events { user.approve(admin) }.first
 
-      expect(user_updated_event[:event_name]).to eq(:user_updated)
-      expect(user_updated_event[:params].first).to eq(user)
-
-      expect(user_approved_event[:event_name]).to eq(:user_approved)
-      expect(user_approved_event[:params].first).to eq(user)
+      expect(event[:event_name]).to eq(:user_approved)
+      expect(event[:params].first).to eq(user)
     end
 
     context 'after approval' do
@@ -734,6 +732,10 @@ describe User do
       before do
         freeze_time date
         user.update_last_seen!
+      end
+
+      after do
+        $redis.flushall
       end
 
       it "updates last_seen_at" do
@@ -1415,9 +1417,8 @@ describe User do
     let(:user) { Fabricate(:user) }
 
     it 'should publish the right message' do
-      message = MessageBus.track_publish { user.logged_out }.find { |m| m.channel == '/logout' }
+      message = MessageBus.track_publish('/logout') { user.logged_out }.first
 
-      expect(message.channel).to eq('/logout')
       expect(message.data).to eq(user.id)
     end
   end
@@ -1514,6 +1515,21 @@ describe User do
       user = Fabricate(:user)
 
       expect(User.human_users).to eq([user])
+    end
+  end
+
+  describe '#publish_notifications_state' do
+    it 'should publish the right message' do
+      notification = Fabricate(:notification, user: user)
+      notification2 = Fabricate(:notification, user: user, read: true)
+
+      message = MessageBus.track_publish("/notification/#{user.id}") do
+        user.publish_notifications_state
+      end.first
+
+      expect(message.data[:recent]).to eq([
+        [notification2.id, true], [notification.id, false]
+      ])
     end
   end
 end

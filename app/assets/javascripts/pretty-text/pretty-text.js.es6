@@ -12,6 +12,7 @@ export function buildOptions(state) {
     siteSettings,
     getURL,
     lookupAvatar,
+    lookupPrimaryUserGroup,
     getTopicInfo,
     topicId,
     categoryHashtagLookup,
@@ -19,12 +20,14 @@ export function buildOptions(state) {
     getCurrentUser,
     currentUser,
     lookupAvatarByPostNumber,
+    lookupPrimaryUserGroupByPostNumber,
     emojiUnicodeReplacer,
     lookupInlineOnebox,
     lookupImageUrls,
     previewing,
     linkify,
-    censoredWords
+    censoredWords,
+    mentionLookup
   } = state;
 
   let features = {
@@ -49,6 +52,7 @@ export function buildOptions(state) {
     getURL,
     features,
     lookupAvatar,
+    lookupPrimaryUserGroup,
     getTopicInfo,
     topicId,
     categoryHashtagLookup,
@@ -56,7 +60,8 @@ export function buildOptions(state) {
     getCurrentUser,
     currentUser,
     lookupAvatarByPostNumber,
-    mentionLookup: state.mentionLookup,
+    lookupPrimaryUserGroupByPostNumber,
+    mentionLookup,
     emojiUnicodeReplacer,
     lookupInlineOnebox,
     lookupImageUrls,

@@ -69,6 +69,7 @@ export default Ember.Controller.extend({
   topic: null,
   linkLookup: null,
   whisperOrUnlistTopic: Ember.computed.or('model.whisper', 'model.unlistTopic'),
+  categories: Ember.computed.alias('site.categoriesList'),
 
   @computed('model.replyingToTopic', 'model.creatingPrivateMessage', 'model.targetUsernames')
   focusTarget(replyingToTopic, creatingPM, usernames) {
@@ -340,7 +341,7 @@ export default Ember.Controller.extend({
     },
 
     hitEsc() {
-      if (Ember.$(".emoji-picker-modal").length === 1) {
+      if (Ember.$(".emoji-picker-modal.fadeIn").length === 1) {
         this.appEvents.trigger('emoji-picker:close');
         return;
       }
@@ -396,10 +397,6 @@ export default Ember.Controller.extend({
 
   },
 
-  categories: function() {
-    return Discourse.Category.list();
-  }.property(),
-
   disableSubmit: Ember.computed.or("model.loading", "isUploading"),
 
   save(force) {
@@ -430,7 +427,7 @@ export default Ember.Controller.extend({
 
         let buttons = [{
           "label": I18n.t("composer.cancel"),
-          "class": "cancel",
+          "class": "d-modal-cancel",
           "link": true
         }];
 
@@ -654,7 +651,7 @@ export default Ember.Controller.extend({
       if (!splitCategory[1]) {
         category = this.site.get('categories').findBy('nameLower', splitCategory[0].toLowerCase());
       } else {
-        const categories = Discourse.Category.list();
+        const categories = this.site.get('categories');
         const mainCategory = categories.findBy('nameLower', splitCategory[0].toLowerCase());
         category = categories.find(function(item) {
           return item && item.get('nameLower') === splitCategory[1].toLowerCase() && item.get('parent_category_id') === mainCategory.id;

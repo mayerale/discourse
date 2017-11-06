@@ -290,9 +290,11 @@ class PostRevisor
       private_message = @post.topic.private_message?
 
       prev_owner_user_stat = prev_owner.user_stat
-      prev_owner_user_stat.post_count -= 1
-      prev_owner_user_stat.topic_count -= 1 if @post.is_first_post?
-      prev_owner_user_stat.likes_received -= likes if !private_message
+      unless private_message
+        prev_owner_user_stat.post_count -= 1 if @post.post_type == Post.types[:regular]
+        prev_owner_user_stat.topic_count -= 1 if @post.is_first_post?
+        prev_owner_user_stat.likes_received -= likes
+      end
       prev_owner_user_stat.update_topic_reply_count
 
       if @post.created_at == prev_owner.user_stat.first_post_created_at
@@ -302,9 +304,11 @@ class PostRevisor
       prev_owner_user_stat.save!
 
       new_owner_user_stat = new_owner.user_stat
-      new_owner_user_stat.post_count += 1
-      new_owner_user_stat.topic_count += 1 if @post.is_first_post?
-      new_owner_user_stat.likes_received += likes if !private_message
+      unless private_message
+        new_owner_user_stat.post_count += 1 if @post.post_type == Post.types[:regular]
+        new_owner_user_stat.topic_count += 1 if @post.is_first_post?
+        new_owner_user_stat.likes_received += likes
+      end
       new_owner_user_stat.update_topic_reply_count
       new_owner_user_stat.save!
     end
@@ -316,7 +320,7 @@ class PostRevisor
 
   def remove_flags_and_unhide_post
     return unless editing_a_flagged_and_hidden_post?
-    @post.post_actions.where(post_action_type_id: PostActionType.flag_types.values).each do |action|
+    @post.post_actions.where(post_action_type_id: PostActionType.flag_types_without_custom.values).each do |action|
       action.remove_act!(Discourse.system_user)
     end
     @post.unhide!

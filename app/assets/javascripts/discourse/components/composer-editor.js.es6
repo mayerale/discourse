@@ -75,6 +75,19 @@ export default Ember.Component.extend({
             return tinyAvatar(quotedPost.get('avatar_template'));
           }
         }
+      },
+
+      lookupPrimaryUserGroupByPostNumber: (postNumber, topicId) => {
+        const topic = this.get('topic');
+        if (!topic) { return; }
+
+        const posts = topic.get('postStream.posts');
+        if (posts && topicId === topic.get('id')) {
+          const quotedPost = posts.findBy("post_number", postNumber);
+          if (quotedPost) {
+            return quotedPost.primary_group_name;
+          }
+        }
       }
     };
   },
@@ -85,7 +98,11 @@ export default Ember.Component.extend({
     const $input = this.$('.d-editor-input');
     $input.autocomplete({
       template: findRawTemplate('user-selector-autocomplete'),
-      dataSource: term => userSearch({ term, topicId, includeGroups: true }),
+      dataSource: term => userSearch({
+        term,
+        topicId,
+        includeMentionableGroups: true
+      }),
       key: "@",
       transformComplete: v => v.username || v.name
     });

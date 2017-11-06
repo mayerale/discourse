@@ -3,6 +3,7 @@ require_dependency 'new_post_manager'
 
 class TopicViewSerializer < ApplicationSerializer
   include PostStreamSerializerMixin
+  include SuggestedTopicsMixin
   include ApplicationHelper
 
   def self.attributes_from_topic(*list)
@@ -60,6 +61,7 @@ class TopicViewSerializer < ApplicationSerializer
              :message_archived,
              :tags,
              :topic_timer,
+             :private_topic_timer,
              :unicode_title,
              :message_bus_last_id,
              :participant_count
@@ -94,12 +96,6 @@ class TopicViewSerializer < ApplicationSerializer
       end
     end
 
-    if object.suggested_topics&.topics.present?
-      result[:suggested_topics] = object.suggested_topics.topics.map do |t|
-        SuggestedTopicSerializer.new(t, scope: scope, root: false)
-      end
-    end
-
     if object.links.present?
       result[:links] = object.links.map do |user|
         TopicLinkSerializer.new(user, scope: scope, root: false)
@@ -118,11 +114,13 @@ class TopicViewSerializer < ApplicationSerializer
     result[:can_delete] = true if scope.can_delete?(object.topic)
     result[:can_recover] = true if scope.can_recover_topic?(object.topic)
     result[:can_remove_allowed_users] = true if scope.can_remove_allowed_users?(object.topic)
+    result[:can_remove_self_id] = scope.user.id if scope.can_remove_allowed_users?(object.topic, scope.user)
     result[:can_invite_to] = true if scope.can_invite_to?(object.topic)
     result[:can_invite_via_email] = true if scope.can_invite_via_email?(object.topic)
     result[:can_create_post] = true if scope.can_create?(Post, object.topic)
     result[:can_reply_as_new_topic] = true if scope.can_reply_as_new_topic?(object.topic)
     result[:can_flag_topic] = actions_summary.any? { |a| a[:can_act] }
+    result[:can_convert_topic] = true if scope.can_convert_topic?(object.topic)
     result
   end
 
@@ -244,6 +242,15 @@ class TopicViewSerializer < ApplicationSerializer
 
   def topic_timer
     TopicTimerSerializer.new(object.topic.public_topic_timer, root: false)
+  end
+
+  def include_private_topic_timer?
+    scope.user
+  end
+
+  def private_topic_timer
+    timer = object.topic.private_topic_timer(scope.user)
+    TopicTimerSerializer.new(timer, root: false)
   end
 
   def tags

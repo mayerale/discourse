@@ -1,4 +1,4 @@
-QUnit.module('store:main');
+QUnit.module('service:store');
 
 import createStore from 'helpers/create-store';
 
@@ -139,6 +139,13 @@ QUnit.test('find embedded', function(assert) {
     assert.equal(fruitCols[1].get('id'), 2);
 
     assert.ok(f.get('category'), 'categories are found automatically');
+  });
+});
+
+QUnit.test('meta types', function(assert) {
+  const store = createStore();
+  return store.find('barn', 1).then(function(f) {
+    assert.equal(f.get('owner.name'), 'Old MacDonald', 'it has the embedded farmer');
   });
 });
 

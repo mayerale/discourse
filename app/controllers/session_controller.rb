@@ -4,12 +4,12 @@ require_dependency 'single_sign_on'
 class SessionController < ApplicationController
   class LocalLoginNotAllowed < StandardError; end
   rescue_from LocalLoginNotAllowed do
-    render nothing: true, status: 500
+    render body: nil, status: 500
   end
 
-  before_filter :check_local_login_allowed, only: %i(create forgot_password)
-  skip_before_filter :redirect_to_login_if_required
-  skip_before_filter :preload_json, :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider', 'destroy']
+  before_action :check_local_login_allowed, only: %i(create forgot_password)
+  skip_before_action :redirect_to_login_if_required
+  skip_before_action :preload_json, :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider', 'destroy']
 
   ACTIVATE_USER_KEY = "activate_user"
 
@@ -36,7 +36,7 @@ class SessionController < ApplicationController
       end
       redirect_to sso.to_url
     else
-      render nothing: true, status: 404
+      render body: nil, status: 404
     end
   end
 
@@ -51,6 +51,7 @@ class SessionController < ApplicationController
         sso.external_id = current_user.id.to_s
         sso.admin = current_user.admin?
         sso.moderator = current_user.moderator?
+        sso.groups = current_user.groups.pluck(:name)
 
         if sso.return_sso_url.blank?
           render plain: "return_sso_url is blank, it must be provided", status: 400
@@ -67,7 +68,7 @@ class SessionController < ApplicationController
         redirect_to path('/login')
       end
     else
-      render nothing: true, status: 404
+      render body: nil, status: 404
     end
   end
 
@@ -247,7 +248,7 @@ class SessionController < ApplicationController
     end
 
     json = { result: "ok" }
-    unless SiteSetting.forgot_password_strict
+    unless SiteSetting.hide_email_address_taken
       json[:user_found] = user_presence
     end
 
@@ -261,7 +262,7 @@ class SessionController < ApplicationController
     if current_user.present?
       render_serialized(current_user, CurrentUserSerializer)
     else
-      render nothing: true, status: 404
+      render body: nil, status: 404
     end
   end
 
@@ -269,7 +270,7 @@ class SessionController < ApplicationController
     reset_session
     log_off_user
     if request.xhr?
-      render nothing: true
+      render body: nil
     else
       redirect_to (params[:return_url] || path("/"))
     end
@@ -331,8 +332,9 @@ class SessionController < ApplicationController
 
     if payload = session.delete(:sso_payload)
       sso_provider(payload)
+    else
+      render_serialized(user, UserSerializer)
     end
-    render_serialized(user, UserSerializer)
   end
 
   def render_sso_error(status:, text:)

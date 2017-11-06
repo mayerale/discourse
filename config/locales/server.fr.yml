@@ -46,6 +46,7 @@ fr:
         no_message_id_error: "Se produit quand le courriel n'a pas d'entête \"Message-Id\"."
         auto_generated_email_error: "Se produit quand l'entête « precedence » est : list, junk, bulk ou auto-reply, ou lorsque n'importe quel autre entête contient : auto-submitted, auto-replied ou auto-generated."
         no_body_detected_error: "Se produit quand il est impossible d'extraire le corps du message et qu'il n'y a pas de pièces-jointes."
+        no_sender_detected_error: "Se produit lorsque nous n'avons pas trouvé une adresse courriel valide dans l'entête From."
         inactive_user_error: "Se produit quand l'expéditeur n'est pas actif."
         blocked_user_error: "Se produit quand l'expéditeur a été bloqué."
         bad_destination_address: "Se produit quand aucune des adresses de courriel des champs To/Cc/Bcc ne correspondent à une adresse de courriel entrante configurée."
@@ -59,6 +60,7 @@ fr:
       unrecognized_error: "Erreur non reconnue"
   errors: &errors
     format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b> : %{message}'
     messages:
       too_long_validation: "est limité à %{max} caractères maximum ; il y en a %{length}."
       invalid_boolean: "Vrai/Faux invalide."
@@ -449,6 +451,10 @@ fr:
     leader:
       title: "meneur"
     change_failed_explanation: "Vous avez essayé de rétrograder %{user_name} au niveau '%{new_trust_level}'. Cependant son niveau de confiance est déjà '%{current_trust_level}'. %{user_name} restera au niveau  '%{current_trust_level}' -  Si vous souhaitez rétrograder un utilisateur vous devez verrouiller le niveau de confiance au préalable"
+  post:
+    image_placeholder:
+      broken: "Cette image ne fonctionne pas"
+      large: "Cette image est trop grande pour l'afficher ici ; cliquer pour voir"
   rate_limiter:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, essayez à nouveau plus tard."
     too_many_requests: "Nous avons une limite journalière du nombre d'actions qui peuvent être effectuées. Veuillez patienter %{time_left} avant de recommencer."
@@ -607,8 +613,8 @@ fr:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Autre chose"
-      description: 'Ce message demande l''attention des responsables pour une autre raison..'
-      short_description: 'Requière l''attention du staff pour une autre raison'
+      description: 'Ce message demande l''attention des responsables pour une autre raison.'
+      short_description: 'Nécessite l''attention du staff pour une autre raison'
       long_form: 'signalé aux responsables'
       email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
       email_body: "%{link}\n\n%{message}"
@@ -628,6 +634,9 @@ fr:
       short_description: 'Voter pour ce message'
       long_form: 'a voté pour ce message'
   user_activity:
+    no_default:
+      self: "Vous n'avez aucune activité pour le moment."
+      others: "Aucune activité."
     no_bookmarks:
       self: "Vous n'avez mis de signets à aucun message ; mettre des signets vous permet de facilement les retrouver par la suite."
       others: "Aucun signet."
@@ -979,7 +988,7 @@ fr:
     allow_index_in_robots_txt: "Préciser dans robots.txt que le site est autorisé à être indexé par les robots des moteurs de recherche."
     email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisés lors de la création de compte, délimitée par des pipes. Exemple : mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer, délimités par un pipe. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourront pas s'enregistrer."
-    forgot_password_strict: "Ne pas mentionner l'existence d'un compte utilisateur quand un utilisateur utilise le formulaire d'oubli de mot de passe."
+    hide_email_address_taken: "Ne pas mentionner l'existence d'un compte utilisateur quand un utilisateur utilise le formulaire d'oubli de mot de passe."
     log_out_strict: "Lors de la déconnexion, déconnecter TOUTES les sessions pour l'utilisateur sur tous les appareils"
     version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les nouveaux messages d'information dans le tableau de bord /admin"
     new_version_emails: "Envoyer un courriel à contact_email quand une nouvelle version de Discourse est disponible."
@@ -1078,6 +1087,8 @@ fr:
     twitter_summary_large_image_url: "URL de l'image par défaut de la carte de résumé Twitter (devrait au moins mesurer 280px en largeur et 150px en hauteur). "
     allow_all_attachments_for_group_messages: "Autorise toutes les pièces-jointes pour les messages de groupes."
     png_to_jpg_quality: "Qualité du fichier JPEG converti (1 est la plus faible, 99 est la meilleure, 100 pour désactiver)."
+    allow_staff_to_upload_any_file_in_pm: "Autoriser les responsables à envoyer n'importe quel fichier dans les messages privés."
+    strip_image_metadata: "Enlever les métadonnées de l'image."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
@@ -1110,6 +1121,7 @@ fr:
     min_trust_to_edit_post: "Le niveau de confiance minimum requis pour modifier des messages."
     min_trust_to_allow_self_wiki: "Le niveau de confiance minimum requis pour transformer ses propres messages en type wiki."
     min_trust_to_send_messages: "Le niveau de confiance minimum pour être autorisé à créer des nouveaux messages privés."
+    min_trust_to_send_email_messages: "Le niveau de confiance minimum requis pour envoyer de nouveaux messages privés par courriel (aux utilisateurs générés)."
     newuser_max_links: "Combien de liens un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_images: "Combien d'images un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_attachments: "Combien de fichiers un nouvel utilisateur peut-il ajouter à un message."
@@ -1210,7 +1222,6 @@ fr:
     pop3_polling_username: "Le nom d'utilisateur du compte POP3 pour le pooling des courriels."
     pop3_polling_password: "Le mot de passe du compte POP3 pour le pooling des courriels."
     log_mail_processing_failures: "Enregistrer tous les problèmes de mails sur\nhttp://yoursitename.com/logs"
-    email_in: "Autoriser les utilisateurs à poster de nouveaux sujets par courriel (requêtes via pop3 requise). Configurer les adresses dans l'onglet \"Paramètres\" de chaque catégorie."
     email_in_min_trust: "Le niveau de confiance minimum qu'un utilisateur doit avoir pour être autorisé à poster de nouveaux sujets par courriel."
     email_prefix: "Le [label] qui sera utilisé dans le sujet des courriels. Par défaut il prend la valeur de 'title'."
     email_site_title: "Le titre du site utilisé comme expéditeur pour les courriels du site. Par défaut il prend la valeur de 'title'. Si votre 'title\" utilise des caractères interdits dans les courriels, utiliser ce paramètre."
@@ -1246,6 +1257,7 @@ fr:
     anonymous_posting_min_trust_level: "Le niveau de confiance minimum pour passer en mode anonyme."
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme tous les N minutes pour chaque utilisateur. Exemple: si 600 est choisi, dès 600 minutes après le dernier message ET que l'utilisateur passe en mode anonyme, un nouveau compte anonyme lui sera crée."
     hide_user_profiles_from_public: "Cacher les cartes, les profils et le répertoire d'utilisateurs aux visiteurs."
+    hide_suspension_reasons: "Ne pas afficher les raisons d'une suspension sur les profils utilisateurs."
     user_website_domains_whitelist: "Les sites Web des utilisateurs vont être vérifiés contre ces domaines. Liste délimitée par des pipes (|)."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
     sequential_replies_threshold: "Nombre de messages successifs qu'un utilisateur peut poster dans un sujet avant d'être averti d'avoir posté un nombre excessif de réponses qui se suivent."
@@ -1574,9 +1586,9 @@ fr:
     title: "Téléchargement de la sauvegarde"
     subject_template: "[%{email_prefix}] Lien Téléchargement Sauvegarde"
     text_body_template: |
-      Voici le [site backup download](%{backup_file_path}) que vous avez demandé.
+      Voici le [téléchargement de la sauvegarde du site](%{backup_file_path}) que vous avez demandé.
 
-      Nous avons envoyé ce lien par email pour des raisons de sécurité.
+      Nous avons envoyé ce lien à votre adresse de courriel validée pour des raisons de sécurité.
 
       (Si vous *n'avez pas* effectué cette demande, vous devriez vous poser des questions -- quelqu'un a accès à l'administration de votre site.)
     no_token: |
@@ -1666,15 +1678,6 @@ fr:
       ### Notes de version
 
       %{notes}
-  queued_posts_reminder:
-    title: "Messages dans la file d'attente"
-    subject_template:
-      one: "[%{email_prefix}] 1 message en attente de modération"
-      other: "[%{email_prefix}] %{count} messages en attente de modération"
-    text_body_template: |
-      Bonjour,
-
-      Des messages de nouveaux utilisateurs sont en attente de modération. [Approuvez ou rejetez-les ici](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond au sujet en discussion qui est défini par son titre et son premier message."
     inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté considère que son contenu est offensif, abusif ou enfreint notre [charte](/guidelines)."
@@ -2603,6 +2606,18 @@ fr:
       description: Contributions remarquables durant leur premier mois
       long_description: |
         Ce badge est accordé pour féliciter deux nouveaux utilisateurs chaque mois pour leur excellente contribution mesurée par la fréquence à laquelle leurs messages reçoivent des J'aime et par qui.
+    enthusiast:
+      name: Passionné
+      description: A visité 10 jours
+      long_description: Ce badge est décerné pour avoir visiter 10 jours consécutifs. Merci d'être resté avec nous pendant plus d'une semaine !
+    aficionado:
+      name: Aficionado
+      description: A visité 100 jours
+      long_description: Ce badge est décerné pour avoir visiter 100 jours consécutifs. C'est plus de trois mois !
+    devotee:
+      name: Adepte
+      description: A visité 365 jours
+      long_description: Ce badge est décerné pour avoir visiter 365 jours consécutifs. Waouh, une année entière !
     badge_title_metadata: "%{display_name} badge sur %{site_title}"
   admin_login:
     success: "Courriel envoyé"

@@ -6,7 +6,6 @@ import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 import { createWidget, reopenWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
-import { onPageChange } from 'discourse/lib/page-tracker';
 import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
@@ -19,12 +18,12 @@ import { addUserMenuGlyph } from 'discourse/widgets/user-menu';
 import { addPostClassesCallback } from 'discourse/widgets/post';
 import { addPostTransformCallback } from 'discourse/widgets/post-stream';
 import { attachAdditionalPanel } from 'discourse/widgets/header';
-import { registerIconRenderer } from 'discourse-common/lib/icon-library';
+import { registerIconRenderer, replaceIcon } from 'discourse-common/lib/icon-library';
 import { addNavItem } from 'discourse/models/nav-item';
-
+import { replaceFormatter } from 'discourse/lib/utilities';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.9';
+const PLUGIN_API_VERSION = '0.8.12';
 
 class PluginApi {
   constructor(version, container) {
@@ -54,12 +53,21 @@ class PluginApi {
    * });
    * ```
    **/
-  modifyClass(resolverName, changes) {
+  modifyClass(resolverName, changes, opts) {
+    opts = opts || {};
+
     if (this.container.cache[resolverName]) {
       console.warn(`"${resolverName}" was already cached in the container. Changes won't be applied.`);
     }
 
     const klass = this.container.factoryFor(resolverName);
+    if (!klass) {
+      if (!opts.ignoreMissing) {
+        console.warn(`"${resolverName}" was not found by modifyClass`);
+      }
+      return;
+    }
+
     klass.class.reopen(changes);
     return klass;
   }
@@ -88,6 +96,18 @@ class PluginApi {
    **/
   registerIconRenderer(fn) {
     registerIconRenderer(fn);
+  }
+
+  /**
+   * Replace all ocurrences of one icon with another without having to
+   * resort to a custom IconRenderer. If you want to do something more
+   * complicated than a simple replacement then create a new icon renderer.
+   *
+   * api.replaceIcon('d-tracking', 'smile-o');
+   *
+   **/
+  replaceIcon(source, destination) {
+    replaceIcon(source, destination);
   }
 
   /**
@@ -329,7 +349,8 @@ class PluginApi {
     ```
   **/
   onPageChange(fn) {
-    onPageChange(fn);
+    let appEvents = this.container.lookup('app-events:main');
+    appEvents.on('page:changed', data => fn(data.url, data.title));
   }
 
   /**
@@ -420,7 +441,7 @@ class PluginApi {
    * will issue a request to `/mice.json`
    **/
   addStorePluralization(thing, plural) {
-    this.container.lookup("store:main").addPluralization(thing, plural);
+    this.container.lookup("service:store").addPluralization(thing, plural);
   }
 
   /**
@@ -548,6 +569,25 @@ class PluginApi {
     } else {
       addNavItem(item);
     }
+  }
+
+
+  /**
+   *
+   * Registers a function that will format a username when displayed. This will not
+   * be applied when the username is used as an `id` or in URL strings.
+   *
+   * Example:
+   *
+   * ```
+   * // display usernames in UPPER CASE
+   * api.formatUsername(username => username.toUpperCase());
+   *
+   * ```
+   *
+   **/
+  formatUsername(fn) {
+    replaceFormatter(fn);
   }
 }
 

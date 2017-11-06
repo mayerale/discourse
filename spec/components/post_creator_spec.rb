@@ -387,26 +387,33 @@ describe PostCreator do
     it 'whispers do not mess up the public view' do
 
       first = PostCreator.new(user,
-                                topic_id: topic.id,
-                                raw: 'this is the first post').create
+        topic_id: topic.id,
+        raw: 'this is the first post').create
+
+      user_stat = user.user_stat
 
       whisper = PostCreator.new(user,
-                                topic_id: topic.id,
-                                reply_to_post_number: 1,
-                                post_type: Post.types[:whisper],
-                                raw: 'this is a whispered reply').create
+        topic_id: topic.id,
+        reply_to_post_number: 1,
+        post_type: Post.types[:whisper],
+        raw: 'this is a whispered reply').create
+
+      # don't count whispers in user stats
+      expect(user_stat.reload.post_count).to eq(1)
 
       expect(whisper).to be_present
       expect(whisper.post_type).to eq(Post.types[:whisper])
 
       whisper_reply = PostCreator.new(user,
-                                      topic_id: topic.id,
-                                      reply_to_post_number: whisper.post_number,
-                                      post_type: Post.types[:regular],
-                                      raw: 'replying to a whisper this time').create
+        topic_id: topic.id,
+        reply_to_post_number: whisper.post_number,
+        post_type: Post.types[:regular],
+        raw: 'replying to a whisper this time').create
 
       expect(whisper_reply).to be_present
       expect(whisper_reply.post_type).to eq(Post.types[:whisper])
+
+      expect(user_stat.reload.post_count).to eq(1)
 
       # date is not precise enough in db
       whisper_reply.reload
@@ -423,10 +430,12 @@ describe PostCreator do
       expect(topic.posts_count).to eq(1)
       expect(topic.highest_staff_post_number).to eq(3)
 
-      topic.update_columns(highest_staff_post_number: 0,
-                           highest_post_number: 0,
-                           posts_count: 0,
-                           last_posted_at: 1.year.ago)
+      topic.update_columns(
+        highest_staff_post_number: 0,
+        highest_post_number: 0,
+        posts_count: 0,
+        last_posted_at: 1.year.ago
+      )
 
       Topic.reset_highest(topic.id)
 
@@ -951,6 +960,30 @@ describe PostCreator do
     it "should raise an error when post fails to be created" do
       post_creator = PostCreator.new(user, title: '', raw: '')
       expect { post_creator.create! }.to raise_error(ActiveRecord::RecordNotSaved)
+    end
+  end
+
+  context 'private message to a user that has disabled private messages' do
+    let(:another_user) { Fabricate(:user) }
+
+    before do
+      another_user.user_option.update!(allow_private_messages: false)
+    end
+
+    it 'should not be valid' do
+      post_creator = PostCreator.new(
+        user,
+        title: 'this message is to someone who muted me!',
+        raw: "you will have to see this even if you muted me!",
+        archetype: Archetype.private_message,
+        target_usernames: "#{another_user.username}"
+      )
+
+      expect(post_creator).to_not be_valid
+
+      expect(post_creator.errors.full_messages).to include(I18n.t(
+        "not_accepting_pms", username: another_user.username
+      ))
     end
   end
 

@@ -556,17 +556,21 @@ describe Group do
     end
   end
 
-  describe '.search_group' do
-    let(:group) { Fabricate(:group, name: 'tEsT', full_name: 'eSTt') }
+  describe '.search_groups' do
+    let(:group) { Fabricate(:group, name: 'tEsT_more_things', full_name: 'Abc something awesome') }
 
     it 'should return the right groups' do
       group
 
-      expect(Group.search_group('te')).to eq([group])
-      expect(Group.search_group('TE')).to eq([group])
-      expect(Group.search_group('es')).to eq([group])
-      expect(Group.search_group('ES')).to eq([group])
-      expect(Group.search_group('test2')).to eq([])
+      expect(Group.search_groups('te')).to eq([group])
+      expect(Group.search_groups('TE')).to eq([group])
+      expect(Group.search_groups('es')).to eq([group])
+      expect(Group.search_groups('ES')).to eq([group])
+      expect(Group.search_groups('ngs')).to eq([group])
+      expect(Group.search_groups('sOmEthi')).to eq([group])
+      expect(Group.search_groups('abc')).to eq([group])
+      expect(Group.search_groups('sOmEthi')).to eq([group])
+      expect(Group.search_groups('test2')).to eq([])
     end
   end
 
@@ -576,5 +580,22 @@ describe Group do
 
       expect(group.group_users.map(&:user_id)).to contain_exactly(user.id, admin.id)
     end
+  end
+
+  it "Correctly updates has_messages" do
+    group = Fabricate(:group, has_messages: true)
+    topic = Fabricate(:private_message_topic)
+
+    # when group message is not present
+    Group.refresh_has_messages!
+    group.reload
+    expect(group.has_messages?).to eq false
+
+    # when group message is present
+    group.update!(has_messages: true)
+    TopicAllowedGroup.create!(topic_id: topic.id, group_id: group.id)
+    Group.refresh_has_messages!
+    group.reload
+    expect(group.has_messages?).to eq true
   end
 end

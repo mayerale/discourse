@@ -4,7 +4,7 @@ import { createWidget } from 'discourse/widgets/widget';
 import DiscourseURL from 'discourse/lib/url';
 import { h } from 'virtual-dom';
 import { emojiUnescape } from 'discourse/lib/text';
-import { postUrl, escapeExpression } from 'discourse/lib/utilities';
+import { postUrl, escapeExpression, formatUsername } from 'discourse/lib/utilities';
 import { setTransientHeader } from 'discourse/lib/ajax';
 import { userPath } from 'discourse/lib/url';
 import { iconNode } from 'discourse-common/lib/icon-library';
@@ -79,11 +79,11 @@ createWidget('notification-item', {
       return I18n.t(scope, { count, group_name });
     }
 
-    const username = data.display_username;
+    const username = formatUsername(data.display_username);
     const description = this.description();
     if (notificationType === LIKED_TYPE && data.count > 1) {
       const count = data.count - 2;
-      const username2 = data.username2;
+      const username2 = formatUsername(data.username2);
       if (count===0) {
         return I18n.t('notifications.liked_2', {description, username, username2});
       } else {
@@ -99,8 +99,11 @@ createWidget('notification-item', {
     const lookup = this.site.get('notificationLookup');
     const notName = lookup[notificationType];
 
-    let title = I18n.t(`notifications.alt.${notName}`);
-    let icon = iconNode(`notification.${notName}`, { title });
+    let { data } = attrs;
+    let infoKey = notName === 'custom' ? data.message : notName;
+    let title = I18n.t(`notifications.alt.${infoKey}`);
+    let icon = iconNode(`notification.${infoKey}`, { title });
+
     let text = emojiUnescape(this.text(notificationType, notName));
 
     // We can use a `<p>` tag here once other languages have fixed their HTML

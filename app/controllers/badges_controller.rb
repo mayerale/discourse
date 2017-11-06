@@ -1,5 +1,5 @@
 class BadgesController < ApplicationController
-  skip_before_filter :check_xhr, only: [:index, :show]
+  skip_before_action :check_xhr, only: [:index, :show]
 
   def index
     raise Discourse::NotFound unless SiteSetting.enable_badges
@@ -46,6 +46,9 @@ class BadgesController < ApplicationController
       user_badge = UserBadge.find_by(user_id: current_user.id, badge_id: @badge.id)
       if user_badge && user_badge.notification
         user_badge.notification.update_attributes read: true
+      end
+      if user_badge
+        @badge.has_badge = true
       end
     end
 

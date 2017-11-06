@@ -141,6 +141,7 @@ fa_IR:
         eu_west_2: "اروپا (لندن)"
         sa_east_1: "آمریکای جنوبی (سائوپائولو)"
         us_east_1: "شرق ایالات متحده (ویرجینیا شمالی)"
+        us_east_2: "شرق ایالات متحده (اوهایو)"
         us_gov_west_1: "AWS GovCloud (ایالات متحده)"
         us_west_1: "غرب ایالات متحده (کالیفرنیا شمالی)"
         us_west_2: "غرب ایالات متحده  (اورگان)"
@@ -337,10 +338,14 @@ fa_IR:
       join: "پیوستن به گروه"
       leave: "ترک گروه"
       request: "درخواست پیوستن به گروه"
+      message: "پیام"
       automatic_group: گروه خودکار
       closed_group: گروه بسته شده
       is_group_user: "شما عضو این گروه هستید"
       allow_membership_requests: "اجازه ارسال درخواست عضویت در گروه به کاربران"
+      membership_request:
+        submit: "ارسال درخواست"
+        title: "درخواست پیوستن به @%{group_name}"
       membership: "عضویت"
       name: "نام"
       user_count: "تعداد اعضا"
@@ -351,7 +356,7 @@ fa_IR:
         title: "گروه‌ها"
         empty: "هیچ گروه قابل نمایشی وجود ندارد."
       title:
-        other: "گروه‌ها"
+        other: "گروه ها"
       activity: "فعالیت"
       members: "اعضا"
       topics: "موضوعات"
@@ -363,7 +368,7 @@ fa_IR:
         title: "چه کسی می‌تواند این گروه را ببیند؟"
         public: "همه"
         members: "صاحبان گروه، اعضا، و مدیران"
-        staff: "صاحبان گروه، و کارکنان"
+        staff: "صاحبان گروه و کارکنان"
         owners: "صاحبان گروه و مدیران"
       alias_levels:
         nobody: "هیچ‌کس"
@@ -499,6 +504,7 @@ fa_IR:
       admin_tooltip: "این کاربر یک ادمین است"
       blocked_tooltip: "این کاربر مسدود شده است"
       suspended_notice: "این کاربر تا {{date}} در وضعیت معلق است."
+      suspended_permanently: "این کاربر معلق شده."
       suspended_reason: "دلیل: "
       github_profile: "Github"
       email_activity_summary: "چکیده‌ی فعالیت"
@@ -976,12 +982,26 @@ fa_IR:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      default_header_text: انتخاب...
+      no_content: چیزی یافت نشد.
+      filter_placeholder: جستجو...
+    emoji_picker:
+      people: مردم
+      nature: طبیعت
+      food: غذا
+      activity: فعالیت
+      travel: سفر
+      objects: اشیا
+      celebration: جشن
+      recent: اخیرا استفاده شده
     composer:
       emoji: "شکلک :)"
       more_emoji: "بیشتر..."
       options: "گزینه‌ها"
       whisper: "زمزمه"
       unlist: "از فهرست  پاک شده"
+      blockquote_text: "نقل‌قول"
       add_warning: "این یک هشدار رسمی است."
       toggle_whisper: "تغییر وضعیت زمزمه"
       toggle_unlisted: "تغییر وضعیت از لیست خارج شده"
@@ -1048,10 +1068,6 @@ fa_IR:
       olist_title: "فهرست شماره گذاری شده"
       ulist_title: "فهرست نقطه‌ای"
       list_item: "فهرست موارد"
-      heading_label: "H"
-      heading_title: "عنوان"
-      heading_text: "عنوان"
-      hr_title: "خط‌کش افقی"
       help: "راهنمای ویرایش با Markdown"
       toggler: "مخفی‌سازی یا نمایش پنل نوشتن"
       modal_ok: "تایید"
@@ -1067,27 +1083,6 @@ fa_IR:
       empty: "اعلانی پیدا نشد."
       more: "نمایش اعلان‌های قدیمی‌تر"
       total_flagged: "همه‌ی نوشته‌های پرچم خورده"
-      mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
-      liked_many:
-        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} و {{count}} دیگر</span> {{description}}</p>"
-      private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
-      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title=\"اعطای نشان\" class=\"fa fa-certificate\"></i><p>نشان '{{description}}'  را بدست آوردید</p>"
-      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>موضوع جدید</span> {{description}}</p"
-      group_message_summary:
-        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} پیام در صندوق دریافتی  {{group_name}}</p>"
       alt:
         mentioned: "اشاره شده توسط"
         quoted: "نقل‌قول شده توسط"
@@ -1274,7 +1269,7 @@ fa_IR:
         login_required: "برای مشاهده‌ی موضوع باید وارد سیستم شوید."
       server_error:
         title: "بارگذاری موضوع ناموفق بود"
-        description: "متأسفیم، نتوانستیم موضوع را بار‌گیری کنیم، احتمالا دلیل آن مشکل اتصال اینترنت است. لطفاً دوباره تلاش کنید. اگر مشکل پابرجا بود، ما به ما اطلاع دهید."
+        description: "متأسفیم، نتوانستیم موضوع را بار‌گیری کنیم، احتمالا دلیل آن مشکل اتصال اینترنت است. لطفاً دوباره تلاش کنید. اگر مشکل پابرجا بود، به ما اطلاع دهید."
       not_found:
         title: "موضوع پیدا نشد"
         description: "متأسفیم، نتوانستیم آن موضوع را پیدا کنیم. شاید یکی از همکاران آن را پاک کرده؟"

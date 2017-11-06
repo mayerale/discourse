@@ -202,13 +202,15 @@ class PostDestroyer
     post_ids = PostReply.where(reply_id: @post.id).pluck(:post_id)
 
     if post_ids.present?
-      PostReply.delete_all reply_id: @post.id
+      PostReply.where(reply_id: @post.id).delete_all
       Post.where(id: post_ids).each { |p| p.update_column :reply_count, p.replies.count }
     end
   end
 
   def remove_associated_notifications
-    Notification.delete_all topic_id: @post.topic_id, post_number: @post.post_number
+    Notification
+      .where(topic_id: @post.topic_id, post_number: @post.post_number)
+      .delete_all
   end
 
   def update_associated_category_latest_topic
@@ -229,7 +231,9 @@ class PostDestroyer
       author.user_stat.first_post_created_at = author.posts.order('created_at ASC').first.try(:created_at)
     end
 
-    author.user_stat.post_count -= 1
+    if @post.post_type == Post.types[:regular] && !(@topic.nil? && !@post.is_first_post?)
+      author.user_stat.post_count -= 1
+    end
     author.user_stat.topic_count -= 1 if @post.is_first_post?
 
     # We don't count replies to your own topics
@@ -242,6 +246,16 @@ class PostDestroyer
     if @post.created_at == author.last_posted_at
       author.last_posted_at = author.posts.order('created_at DESC').first.try(:created_at)
       author.save!
+    end
+
+    if @post.is_first_post? && @post.topic && !@post.topic.private_message?
+      # Update stats of all people who replied
+      counts = Post.where(post_type: Post.types[:regular]).where(topic_id: @post.topic_id).group(:user_id).count
+      counts.each do |user_id, count|
+        if user_stat = UserStat.where(user_id: user_id).first
+          user_stat.update_attributes(post_count: user_stat.post_count - count)
+        end
+      end
     end
   end
 

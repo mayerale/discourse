@@ -2,7 +2,7 @@ require_dependency 'search'
 
 class SearchController < ApplicationController
 
-  skip_before_filter :check_xhr, only: :show
+  skip_before_action :check_xhr, only: :show
 
   def self.valid_context_types
     %w{user topic category private_messages}
@@ -29,7 +29,8 @@ class SearchController < ApplicationController
     search_args[:ip_address] = request.remote_ip
     search_args[:user_id] = current_user.id if current_user.present?
 
-    search = Search.new(params[:q], search_args)
+    @search_term = params[:q]
+    search = Search.new(@search_term, search_args)
     result = search.execute
 
     result.find_user_data(guardian) if result
@@ -77,14 +78,14 @@ class SearchController < ApplicationController
     params.require(:search_result_id)
 
     if params[:search_result_type] == 'topic'
-      where = { id: params[:search_log_id] }
+      attributes = { id: params[:search_log_id] }
       if current_user.present?
-        where[:user_id] = current_user.id
+        attributes[:user_id] = current_user.id
       else
-        where[:ip_address] = request.remote_ip
+        attributes[:ip_address] = request.remote_ip
       end
 
-      SearchLog.where(where).update_all(
+      SearchLog.where(attributes).update_all(
         clicked_topic_id: params[:search_result_id]
       )
     end

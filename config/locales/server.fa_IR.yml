@@ -56,6 +56,7 @@ fa_IR:
         topic_closed_error: "این اتفاق زمانی رخ می‌دهد که موضوع مربوطه از سمت مدیران بسته شده باشد."
         bounced_email_error: "ایمیل یک گزارش برگشتی است."
         screened_email_error: "وقتی که ارسال کننده ایمیل پیش از این در حال نمایش باشد، اتفاق می‌افتد."
+      unrecognized_error: "خطای نامشخص"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -159,10 +160,12 @@ fa_IR:
   no_links_allowed: "متأسفیم، کاربران تازه نمی‌توانند در نوشته‌ها پیوند بگذارند."
   too_many_links:
     other: "متأسفیم، کاربران تازه تنها می‌توانند در هر نوشته %{count} پیوند بگذارند."
+  contains_blocked_words: "نوشته‌ی شما حاوی الفاظی است که ممنوع هستند."
   spamming_host: "متأسفانه شما نمی‌توانید پیوندی با آن میزبان را بفرستید."
   user_is_suspended: "کاربر تعلیق شده نمی‌تواند نوشته‌ای ارسال کند."
   topic_not_found: "یک مشکلی وجود دارد.  شاید این موضوع همزمان که شما در حال خواندن آن بودید بسته شده یا پاک شده."
   not_accepting_pms: "با عرض پوزش، کاربر %{username} در حال حاضر پیام نمی‌پذیرد."
+  max_pm_recepients: "متاسفیم. فقط می‌توانید که پیغام را نهایتا به %{recipients_limit} گیرنده بفرستید."
   just_posted_that: "بسیار شبیه به چیزی است که به تازگی ارسال کردید"
   invalid_characters: "شامل نویسه‌های نامعتبر است"
   is_invalid: "نامفهوم است.آیا جمله کامل است؟"
@@ -195,6 +198,7 @@ fa_IR:
     user_posts: "آخرین نوشته ها توسط @%{username}"
     user_topics: "آخرین موضوعات توسط @%{username}"
     tag: "موضوعات برچسب خورده"
+    badge: "نشان %{display_name} در %{site_title}"
   too_late_to_edit: "نوشته‌ی مورد نظر مربوط به زمان بسیار گذشته می باشد. امکان ویرایش و حذف آن وجود ندارد."
   revert_version_same: "نسخه فعلی همان نسخه‌ای است که می‌خواهید به آن برگردید."
   excerpt_image: "تصویر"
@@ -307,6 +311,7 @@ fa_IR:
               too_many_users: "شما در هر بار می توانید به یک کاربر اخطار ارسال نمایید."
               cant_send_pm: "متأسفانه ، شما نمی‌توانید به این کاربر پیام‌خصوصی بفرستید."
               no_user_selected: "باید یک کاربر معتبر انتخاب کنید"
+              reply_by_email_disabled: "پاسخ با ایمیل از کار انداخته شده است."
             featured_link:
               invalid: "نامعتبر است. لینک باید شامل http:// یا https:// باشد."
               invalid_category: "در این دسته بندی قابل ویرایش نیست."
@@ -339,6 +344,10 @@ fa_IR:
           attributes:
             execute_at:
               in_the_past: "باید در آینده باشد."
+        watched_word:
+          attributes:
+            word:
+              too_many: "برای چنین کاری کلمات زیادی است"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>فیلد درباره من نمایه شما خالی است, <a href='/u/%{username_lower}/preferences/about-me'>قصد نوشتن دارید؟</a></div>"
@@ -419,6 +428,10 @@ fa_IR:
     leader:
       title: "راهبر"
     change_failed_explanation: "شما تلاش برای تنزل رتبه دادید %{user_name} به   '%{new_trust_level}'. در هر صورت سطح اعتمادشان در حال حاضر '%{current_trust_level}' است. %{user_name} در '%{current_trust_level}' می‌ماند  - اگر می‌خواهید سطح کاربری را پایین بیاورید، ابتدا سطح اعتماد را قبل کنید."
+  post:
+    image_placeholder:
+      broken: "عکس خراب شده است."
+      large: "عکس بزرگتر از آن است که اینجا نمایش داده شد. برای مشاهده کلیک کنید."
   rate_limiter:
     slow_down: "شما این عمل را بیش از حد انجام داده اید, بعدا دوباره امتحان کنید."
     too_many_requests: "ما روزانه  محدودیت زمانی داریم برای اینکه این اقدام چند بار انجام شود. لطفا %{time_left} قبل از اینکه دوباره تلاش کنید صبر کنید . "
@@ -548,7 +561,7 @@ fa_IR:
       description: 'من می‌خواهم با این شخص به صورت مستقیم و محرمانه درباره نوشته‌اش صحبت کنم.'
       short_description: 'می‌خواهم با این شخص به صورت خصوصی درباره‌ی نوشته‌اش صحبت کنم.'
       long_form: 'به کاربر پیام داده شد'
-      email_title: 'نوشته ی شما در "{title}%"'
+      email_title: 'نوشته ی شما در " %{title} "'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "یک چیز دیگر"
@@ -579,6 +592,9 @@ fa_IR:
     no_likes_given:
       self: "نوشته پسندیده شده‌ای ندارید."
       others: "نوشته‌ی پسندیده شده‌ای وجود ندارد."
+    no_replies:
+      self: "شما به هیچ نوشته‌ای پاسخ نداده‌اید."
+      others: "بدون پاسخ"
   topic_flag_types:
     spam:
       title: 'هرز‌نامه'
@@ -607,6 +623,7 @@ fa_IR:
         remove: "این موضوع دیگر در بنر نیست. دیگر در بالای تمام صفحات به نمایش در نمی‌آید. "
   unsubscribed:
     title: "اشتراک لغو شد!"
+    description: "<b>%{email}</b> از فهرست خارج شد. برای تغییر تنظیمات ایمیل، به <a href='%{url}'>صفحه‌ی تنظیمات کاربری</a> وارد شوید."
     topic_description: "اشتراک مجدد در %{link}، استفاده از مدیریت اعلانات در قسمت پایین یا راست موضوع."
   unsubscribe:
     title: "لغو اشتراک"
@@ -816,6 +833,8 @@ fa_IR:
     search_tokenize_chinese_japanese_korean: "اجبار جستجو برای tokenize کردن چینی/ژاپنی/کره‌ای حتی در سایت هایی که از این زبان‌ها استفاده نمی‌کنند"
     search_prefer_recent_posts: "اگر سرعت جستجوی انجمن پایین است، این گزینه آخرین نوشته‌ها را در ابتدا ایندکس گذاری می‌کند."
     search_recent_posts_size: "تعداد نوشته‌های اخیر در صفحه‌ی اصلی"
+    log_search_queries: "کارنامه جستجوهای انجام شده توسط کاربران"
+    search_query_log_max_size: "حداکثر مقدار جستجوهای انجام شده برای نگهداری"
     allow_uncategorized_topics: "اجازه ایجاد موضوعات فاقد دسته‌بندی را بده. هشدار: درصورتی که موضوعات فاقد دسته‌بندی وجود داشته باشد، بایستی قبل از غیر‌فعال کردن این قابلیت آن‌ها را دسته‌بندی کنید."
     allow_duplicate_topic_titles: "به موضوعات اجازه داشتن عنوان مشابه، تکراری را بده."
     unique_posts_mins: "چند دقیقه قبل از اینکه کاربر بتواند دوباره نوشته‌ای با محتویات یکسان را بگذارد."
@@ -916,7 +935,7 @@ fa_IR:
     allow_index_in_robots_txt: "در robots.txt که به این سایت اجازه دهید که در موتور‌های جستجو ایندکس شود."
     email_domains_blacklist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه ندارند با آن حساب کاربری ثبت‌نام کنند. برای مثال:  mailinator.com|trashmail.net"
     email_domains_whitelist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه باید با آن حساب کاربری ثبت نام کنند. اخطار: کاربرانی با دامنه‌های ایمیلی به غیر از آن‌هایی که در لیست هستند اجازه ندارند. "
-    forgot_password_strict: "آگاه نکردن کاربران از وجود حساب کاربری در صفحه فراموشی روز عبور"
+    hide_email_address_taken: "آگاه نکردن کاربران از وجود حساب کاربری در صفحه فراموشی روز عبور"
     log_out_strict: "وقتی از سیستم خارج می شود، کاربر را از تمام session‌ها بر روی تمام دستگاه‌ها خارج کن "
     version_checks: "Discourse Hub را پینگ کن برای  نسخه بروزرسانی و پیام نسخه جدید را صفحه آمار ادمین نشان بده."
     new_version_emails: "ارسال ایمیل به contact_email address وقتی نسخه جدید  Discourse موجود است. "
@@ -1018,6 +1037,7 @@ fa_IR:
     allow_all_attachments_for_group_messages: "اجازه‌ی ضمیمه فایل در ایمیل پیام‌های گروهی."
     png_to_jpg_quality: "کیفیت تبدیل فایل‌های JPG (1 کمترین کیفیت، 99 بالاترین کیفیت، 100 برای غیر‌فعال)"
     allow_staff_to_upload_any_file_in_pm: "به مدیران اجازه بده که هر فایلی در پیغام خصوصی آپلود کنند."
+    strip_image_metadata: "فراداده های عکس را حذف کن."
     enable_flash_video_onebox: "بکارگیری جاسازی لینک های  swf و flv (ادوبی فلاش Adobe Flash) در oneboxes. اخطار: شاید باعث ایجاد خطرات امنیتی شود."
     default_invitee_trust_level: "سطح اعتماد پیشفرض (0-4) برای دعوت کاربران"
     default_trust_level: "سطح اعتماد پیشفرض(0-4) برای تمام کاربران جدید. اخطار! تغییر این ممکن است شما را در معرض خطر جدی هرزنامه قرار دهد."
@@ -1150,7 +1170,6 @@ fa_IR:
     pop3_polling_username: "نام کاربری برای حساب کاربری POP3 برای نظرسنجی در ایمیل."
     pop3_polling_password: "رمز عبور برای حساب کاربری POP3 برای نظرسنجی در ایمیل."
     log_mail_processing_failures: "گزارش تمام ایمیل ها را در http://yoursitename.com/logs قرار بده"
-    email_in: "به کاربران اجازه بده نوشته های جدید را از طریق ایمیل ارسال کنند. (بهpop3 polling نیاز است). آدرس‌ها را در تنظیمات هر دسته‌بندی پیکربندی کنید. "
     email_in_min_trust: "حداقل میزان سطح اعتماد برای کاربران تا بتوانند نوشته را از طریق ایمیل ارسال کنند. "
     email_prefix: "این [برچسب]  در موضوع ایمیل استفاده شده. اگر تنظيم نشود عنوان به 'عنوان' تبدیل می‌شود."
     email_site_title: "عنوان این سایت به فرستنده ایمیل‌ها در سایت استفاده شده. اگر مقداری عنوان شامل نویسه‌های غیر مجاز باشد، به 'عنوان' تبدیل خواهد شد."
@@ -1547,14 +1566,6 @@ fa_IR:
       ### نکات انتشار
 
       %{notes}
-  queued_posts_reminder:
-    title: "یادآور نوشته‌های زمانبندی شده"
-    subject_template:
-      other: "[%{email_prefix}] %{count} در انتظار بررسی هستند"
-    text_body_template: |
-      سلام،
-
-      نوشته‌های کاربران جدید که منتظر تایید و بررسی هستند. [تایید یا رد کنید](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "نوشته شما به عنوان **بی ربط به موضوع** پرچم‌گذاری شده. انجمن احساس خوبی برای جا دادن آن در موضوع ندارد٬ آن طور که در عنوان و نوشته اول تعریف شده. "
     inappropriate: "نوشاه شما به عنوان ** نامناسب** پرچم‌گذاری شده. انجمن احساس کرده این تهاجمی، توهین آمیز، و یا نقض  [دستورالعمل  انجمن ما است](/guidelines)"
@@ -1774,6 +1785,8 @@ fa_IR:
     email_reject_auto_generated:
       title: "ایمیل رد شده به صورت خودکار ایجاد شده"
       subject_template: "[%{email_prefix}] مشکل ایمیل -- پاسخ ایجاد شده خودکار"
+    email_reject_unrecognized_error:
+      title: "رایانامه رد شده خطای ناشناخته"
     email_error_notification:
       title: "اعلان خطای ایمیل"
       subject_template: "[%{site_name}] مشکل ایمیل  -- ایراد احراز هویت POP "
@@ -1867,6 +1880,10 @@ fa_IR:
     new_user_of_the_month:
       title: "شما کاربر جدید ماه هستید!"
       subject_template: "شما کاربر جدید ماه هستید!"
+    queued_posts_reminder:
+      title: "یادآور نوشته‌های زمانبندی شده"
+      subject_template:
+        other: "%{count} نوشته منتظر بررسی است"
   unsubscribe_link: |
     برای لغو اشتراک از این ایمیل‌ها،  [کلیک کنید](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1891,6 +1908,8 @@ fa_IR:
     visit_link_to_respond: "[موضوع را](%{base_url}%{url}) برای ارسال پاسخ ببینید."
     visit_link_to_respond_pm: "[پیام را](%{base_url}%{url}) برای ارسال پاسخ ببینید."
     posted_by: "نوشته شده توسط {username}% در تاریخ {post_date}%"
+    user_invited_to_private_message_pm_group:
+      title: "کاربر دعوت شده به پیام خصوصی"
     user_invited_to_private_message_pm:
       title: "کاربر دعوت شده به پیام خصوصی"
       subject_template: "[%{email_prefix}] %{username} شما را به پیام '%{topic_title}' دعوت کرده"
@@ -2023,6 +2042,18 @@ fa_IR:
       text_body_template: |2
 
         %{message}
+    account_suspended:
+      title: "حساب کاربری معلق شد"
+      subject_template: "[%{email_prefix}] حساب کاربری شما معلق شده است"
+      text_body_template: |
+        شما از انجمن گفتگو معلق شده اید تا %{suspended_till}.
+
+        %{reason}
+
+        %{message}
+    account_exists:
+      title: "حساب کاربری وحود دارد"
+      subject_template: "[%{email_prefix}] حساب کاربری وحود دارد"
     digest:
       why: "یک گزارش کوتاه از %{site_link}  از آخرین باری که بازدید کردید در %{last_seen_at}"
       since_last_visit: "از آخرین بازدید شما"
@@ -2144,6 +2175,10 @@ fa_IR:
     see_more: "بیشتر"
     search_title: "جستجو در سایت"
     search_google: "گوگل"
+  login_required:
+    welcome_message: |
+      ## [خوش آمدید به %{title}](#welcome)
+      داشتن حساب کاربری الزامی است. لطفا یک حساب کاربری بسازید یا وارد شوید.
   terms_of_service:
     title: "شرایط استفاده از خدمات"
     signup_form_message: 'من  <a href="/tos" target="_blank">شرایط استفاده از خدمات</a> را خواندم و قبول می‌کنم.'
@@ -2341,8 +2376,8 @@ fa_IR:
       long_description: |
         این نشان زمانی اعطا می‌شود  <a href="/guidelines">راهنمای انجمن را بخوانید</a>. دنبال کردن و به اشتراک گذاری این راهنمای ساده به ایجاد یک انجمن امن، لذت‌بخش و پایدار برای همه کمک می‌کند. همیشه به یاد داشته باشید که همیشه فردی وجود دارد که خیلی شبیه شماست، و برعکس این مسئله هم وجود دارد. خوب باشید!
     reader:
-      name: خواننده
-      description: تمام نوشته‌های یک موضوع که بیش از 100 پاسخ دارد را بخوانید.
+      name: اهل مطالعه
+      description: همه‌ی پاسخ‌های یک موضوع با ۱۰۰ پاسخ را مطالعه کرده.
       long_description: |
         این نشان زمانی اعطا می‌شود که یک موضوع طولانی با بیش از 100 پاسخ را بخوانید. خواندن یک گفتگو به دقت به شما کمک می‌کند که گفتگو را دنبال کنید، متوجه دیدگاه‌های متفاوت شوید، و منجر به گفتگو‌های جالب‌تر می‌شود. هرچقدر بیشتر بخوانید، گفتگو بهتر می‌شود. همانطور که گفتیم خواندن یک مسئله بنیادی است! :slight_smile:
     popular_link:

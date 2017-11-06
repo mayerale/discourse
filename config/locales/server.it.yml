@@ -46,6 +46,7 @@ it:
         no_message_id_error: "Succede quando l'email non ha l'intestazione 'Message-Id'."
         auto_generated_email_error: "Succede quando l'intestazione 'precedence' è impostata su: list, junk, bulk oppure auto_reply, oppure quando qualunque altra intestazione contiene: auto-submitted, auto-replied o auto-generated."
         no_body_detected_error: "Succede quando non si riesce ad estrapolare il corpo del messaggio e non ci sono allegati. "
+        no_sender_detected_error: "Succede quando non abbiamo trovato un indirizzo email valido nell'intestazione From."
         inactive_user_error: "Succede quando il mittente non è attivo."
         blocked_user_error: "Succede quando il mittente è stato bloccato."
         bad_destination_address: "Succede quando nessuno degli indirizzi email presente nei campi A/Cc/Bcc corrisponde ad alcun indirizzo email entrante tra quelli configurati."
@@ -56,9 +57,12 @@ it:
         topic_closed_error: "Succede quando arriva una risposta ma l'argomento relativo è stato chiuso."
         bounced_email_error: "L'email rappresenta un rapporto di email tornata indietro."
         screened_email_error: "Succede quando l'indirizzo email del mittente era stato già vagliato."
+        unsubscribe_not_allowed: "Accade quando annullare l'iscrizione tramite email non è consentito per questo utente."
+        email_not_allowed: "Accade quando l'indirizzo email non è in whitelist o è nella blacklist."
       unrecognized_error: "Errore Non Riconosciuto"
   errors: &errors
     format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b>: %{message}'
     messages:
       too_long_validation: "è limitato a %{max} caratteri; tu ne hai inseriti %{length}."
       invalid_boolean: "Booleano non valido."
@@ -128,6 +132,7 @@ it:
   not_logged_in: "Devi essere connesso per farlo."
   not_found: "L'URL o la risorsa richiesta non sono stati trovati."
   invalid_access: "Non hai il permesso di vedere la risorsa richiesta."
+  invalid_api_credentials: "Non è consentito visualizzare la risorsa richiesta. Il nome utente o la chiave API non sono validi."
   read_only_mode_enabled: "Il sito è in modalità di sola lettura. Le interazioni sono disabilitate."
   reading_time: "Tempo di lettura"
   likes: "Mi piace"
@@ -452,6 +457,10 @@ it:
     leader:
       title: "veterano"
     change_failed_explanation: "Hai cercato di degradare %{user_name} a '%{new_trust_level}'. Comunque il suo livello di esperienza è già '%{current_trust_level}'. %{user_name} resterà a '%{current_trust_level}' - se vuoi degradarlo, prima blocca il suo livello di esperienza"
+  post:
+    image_placeholder:
+      broken: "Questa immagine è assente"
+      large: "Questa immagine è troppo grande da visualizzare; clicca per vederla"
   rate_limiter:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
     too_many_requests: "C'è un limite giornaliero su quante volte si può fare questa azione. Per favore attendi %{time_left} prima di riprovare."
@@ -631,6 +640,9 @@ it:
       short_description: 'Vota per questo messaggio'
       long_form: 'hai votato questo messaggio'
   user_activity:
+    no_default:
+      self: "Non hai ancora nessuna attività."
+      others: "Nessuna attività."
     no_bookmarks:
       self: "Non hai aggiunto nessun segnalibro ai messaggi, farlo ti consentirà di ritrovarli facilmente più avanti. "
       others: "Nessun segnalibro."
@@ -963,6 +975,7 @@ it:
     gtm_container_id: "Container id di Google Tag Manager. Es: GTM-ABCDEF"
     enable_escaped_fragments: "Usa le Ajax-Crawling API di Google se non viene rilevato un webcrawler. Vedi https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Permetti ai moderatori di creare nuove categorie"
+    crawler_user_agents: "Elenco degli user agent che sono considerati crawler e hanno servito l'HTML statico anziché il payload di JavaScript"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     use_admin_ip_whitelist: "Gli amministratori possono connettersi soltanto se hanno un indirizzo IP definito nell'elenco degli IP scansionati (Amministrazione > Log > IP scansionati). "
     blacklist_ip_blocks: "Un elenco di blocchi di IP privati che non dovrebbero mai essere scansionati da Discourse"
@@ -991,7 +1004,7 @@ it:
     allow_index_in_robots_txt: "Specifica nel file robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca."
     email_domains_blacklist: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com/trashmail.net"
     email_domains_whitelist: "Una lista di domini email delimitati da carattere pipe (|) che gli utenti DEVONO usare per poter registrare i propri account. ATTENZIONE: gli utenti con domini email differenti da questi non saranno accettati!"
-    forgot_password_strict: "Non informare gli utenti dell'esistenza o meno dell'account quando richiamano la funzione per la password dimenticata."
+    hide_email_address_taken: "Durante l'iscrizione e nel modulo per la password dimenticata, non informare gli utenti che già esiste un account con un dato indirizzo email."
     log_out_strict: "Quando ci si disconnette, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
     version_checks: "Verifica su Discourse Hub l'esistenza di aggiornamenti e mostra i messaggi per le nuove versioni nel cruscotto /admin"
     new_version_emails: "Invia un'email all'indirizzo contact_email quando è disponibile una nuova versione di Discourse."
@@ -1190,6 +1203,7 @@ it:
     auto_block_fast_typers_on_first_post: "Blocca automaticamente gli utenti che non soddisfano min_first_post_typing_time"
     auto_block_fast_typers_max_trust_level: "Livello di esperienza massimo per bloccare automaticamente i digitatori veloci"
     auto_block_first_post_regex: "Regex senza distinzione tra maiuscole e minuscole che, se passato, causerà il blocco del primo messaggio dell'utente e che sarà inviato nella coda dei messaggi da approvare. Esempio: rabbia|a[bc]a, fa in modo che tutti i messaggi contenenti le parole rabbia o aba o aca siano bloccati in un primo momento. Si applica solo al primo messaggio."
+    flags_default_topics: "Di default, mostra gli argomenti segnalati nella sezione di amministrazione"
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
     reply_by_email_address: "Modello per rispondere via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
     alternative_reply_by_email_addresses: "Elenco dei template alternativi per la risposta via email in arrivo da indirizzi email. Esempio: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
@@ -1234,7 +1248,7 @@ it:
     email_site_title: "Il titolo del sito utilizzato come mittente delle email dal sito. Impostazione di default a 'titolo' se non impostata. Se il tuo 'titolo' contiene caratteri non consentiti nelle stringhe del mittente email, utilizza questa impostazione."
     find_related_post_with_key: "Utilizza solo la 'reply key' per trovare il messaggio inviato. ATTENZIONE: la disattivazione di questa funzione consente di impersonare l'utente in base all'indirizzo email."
     minimum_topics_similar: "Quanti argomenti devono esistere prima di presentare argomenti simili quando si creano nuovi argomenti."
-    relative_date_duration: "Dopo quanti giorni dalla pubblicazione le date verranno mostrate in termini relativi (7g) anziché assoluti (20 feb)."
+    relative_date_duration: "Dopo quanti giorni dalla pubblicazione le date verranno mostrate in termini assoluti (20 feb) anziché relativi (7g)."
     delete_user_max_post_age: "Non permettere di cancellare utenti il cui primo messaggio è più vecchio di (x) giorni."
     delete_all_posts_max: "Numero massimo di messaggi che possono essere eliminati contemporaneamente con il pulsante Cancella Tutti. Se un utente ha un numero maggiore di tali messaggi, questi non possono essere eliminati contemporaneamente e l'utente non può essere cancellato."
     username_change_period: "Numero di giorni dall'iscrizione dopo i quali è possibile modificare il nome utente (imposta a 0 per non permettere il cambio del nome utente)."
@@ -1252,7 +1266,7 @@ it:
     suppress_digest_email_after_days: "Sopprimi le email di riepilogo per gli utenti che non visitano il sito per più di (n) giorni."
     digest_suppress_categories: "Sopprimi queste categorie dalle email riepilogative."
     disable_digest_emails: "Disabilita le email riepilogative per tutti gli utenti."
-    email_accent_bg_color: "Colore da usare come background per alcuni elementi delle email HTML. Inserire il nome di un colore ('red') o un valore esadecimale ('#FF000')."
+    email_accent_bg_color: "Colore da usare come background per alcuni elementi delle email HTML. Inserire il nome di un colore ('red') o un valore esadecimale ('#FF0000')."
     email_accent_fg_color: "Colore del testo reso sul colore di background delle email bg nelle email HTML. Inserire il nome di un colore ('white') o un valore esadecimale ('#FFFFFF'). "
     email_link_color: "Colore dei collegamenti nelle email HTML. Inserire il nome di un colore ('blue') o un valore esadecimale ('#0000FF')."
     detect_custom_avatars: "Controllare o meno che gli utenti abbiano caricato immagini personalizzate sul profilo."
@@ -1265,6 +1279,7 @@ it:
     anonymous_posting_min_trust_level: "Livello di esperienza minimo richiesto per abilitare la pubblicazione in modalità anonima"
     anonymous_account_duration_minutes: "Per proteggere l'anonimato creare un nuovo account anonimo ogni N minuti per ogni utente. Esempio: se impostato a 600, non appena passano 600 minuti dall'ultimo messaggio E l'utente passa in modalità anonima, viene creato un nuovo account anonimo."
     hide_user_profiles_from_public: "Disabilita schede utenti, profili utenti e directory utenti per gli utenti anonimi."
+    hide_suspension_reasons: "Non visualizzare pubblicamente le ragioni della sospensione sui profili utente."
     user_website_domains_whitelist: "Verrà verificato il sito web dell'utente per questi domini. Lista delimitata dal carattere pipe."
     allow_profile_backgrounds: "Permetti agli utenti di caricare immagini di sfondo per il profilo."
     sequential_replies_threshold: "Numero di messaggi che un utente deve pubblicare di fila in un argomento prima che gli venga ricordato delle troppe risposte sequenziali."
@@ -1281,6 +1296,7 @@ it:
     topic_page_title_includes_category: "Il titolo dell'argomento sulla pagina include il nome della categoria."
     native_app_install_banner: "Domanda ai visitatori ricorrenti di installare l'app nativa di Discourse."
     share_anonymized_statistics: "Condividi statistiche anonime di utilizzo."
+    auto_handle_queued_age: "Gestisci automaticamente i record che sono in attesa di essere rivisti dopo tale numero di giorni. Le segnalazioni saranno ignorate. I messaggi in attesa e gli utenti saranno rifiutati. Imposta a 0 per disattivare questa funzionalità."
     max_prints_per_hour_per_user: "Numero massimo di impressioni /pagine di stampa (imposta a 0 per disattivare)"
     full_name_required: "Il nome completo è un campo obbligatorio del profilo utente."
     enable_names: "Mostra il nome completo dell'utente su profilo, scheda utente e email. Disabilita per nascondere il nome completo ovunque."
@@ -1312,6 +1328,7 @@ it:
     auto_close_topics_post_count: "Numero massimo di messaggi consentiti in un argomento prima di essere automaticamente chiuso (0 per disabilitare)"
     code_formatting_style: "Il pulsante del testo preformattato nel composer verrà predefinito a questo stile di formattazione del codice"
     max_allowed_message_recipients: "Numero massimo di destinatari consentiti in un messaggio privato."
+    watched_words_regular_expressions: "Le parole osservate sono espressioni regolari."
     default_email_digest_frequency: "Con quale frequenza gli utenti ricevono email riepilogative di default."
     default_include_tl0_in_digests: "Per impostazione predefinita, includi i messaggi dei nuovi utenti nelle email riepilogative. Gli utenti possono modificare questa impostazione nelle loro preferenze"
     default_email_private_messages: " Invia una email quando qualcuno scrive un messaggio ad un utente di default."
@@ -1514,7 +1531,7 @@ it:
     username:
       short: "deve essere almeno di %{min} caratteri"
       long: "non deve essere più lungo di %{max} caratteri"
-      characters: "deve includere solo numeri, lettere e trattini bassi"
+      characters: "deve includere solo numeri, lettere, trattini e trattini bassi"
       unique: "deve essere univoco"
       blank: "deve essere presente"
       must_begin_with_alphanumeric_or_underscore: "deve iniziare con una lettera, un numero o un underscore"
@@ -1530,6 +1547,7 @@ it:
       max_new_accounts_per_registration_ip: "Le nuove iscrizioni non sono consentite dal tuo indirizzo IP (limite massimo raggiunto). Contatta un membro dello staff."
     website:
       domain_not_allowed: "Il sito web non è valido. I domini consentiti sono: %{domains}"
+    auto_rejected: "Rifiutato automaticamente a causa dell'età. Vedi l'impostazione del sito auto_handle_queued_age."
   flags_reminder:
     flags_were_submitted:
       one: "Flags were submitted over 1 hour ago. [Please review them](/admin/flags)."
@@ -1720,15 +1738,6 @@ it:
       ### Note di rilascio
 
       %{notes}
-  queued_posts_reminder:
-    title: "Promemoria Messaggi in Coda"
-    subject_template:
-      one: "[%{email_prefix}] 1 post waiting to be reviewed"
-      other: "[%{email_prefix}] %{count} messaggi in attesa di essere revisionati"
-    text_body_template: |
-      Ciao,
-
-      I messaggi di nuovi utenti sono stati trattenuti per la moderazione e attualmente sono in attesa di essere rivisti.  [Approvali o rifiutali qui](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](/guidelines)."
@@ -1888,6 +1897,13 @@ it:
         La tua risposta è stata inviata da un indirizzo email sconosciuto. Prova a rispondere da un altro indirizzo email, o [contatta un membro dello staff](%{base_url}/about).
     email_reject_screened_email:
       title: "Email Rifiutata Email Scansionata"
+      subject_template: "[%{email_prefix}] Problema email -- Email Bloccata"
+      text_body_template: |
+        Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
+
+        La tua risposta è stata inviata da un indirizzo email bloccato. Prova a rispondere da un altro indirizzo email, o [contatta un membro dello staff](%{base_url}/about).
+    email_reject_not_allowed_email:
+      title: "Email Rifiuta Email Non Consentita"
       subject_template: "[%{email_prefix}] Problema email -- Email Bloccata"
       text_body_template: |
         Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
@@ -2120,6 +2136,15 @@ it:
         Questo premio viene assegnato solo a due nuovi utenti al mese e sarà visibile permanentemente sulla [tua pagina utente](%{base_url}/my/badges).
 
         Sei diventato velocemente un membro prezioso della nostra comunità. Grazie per l'adesione e continua a fare un buon lavoro!
+    queued_posts_reminder:
+      title: "Promemoria Messaggi in Coda"
+      subject_template:
+        one: "messaggi in attesa di essere revisionati "
+        other: "%{count} messaggi in attesa di essere revisionati"
+      text_body_template: |
+        Ciao,
+
+        dei messaggi di nuovi utenti sono stati trattenuti per la moderazione e attualmente sono in attesa di essere rivisti. [Approvali o rifiutali qui](%{base_url}/queued-posts).
   unsubscribe_link: |
     Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2316,6 +2341,26 @@ it:
       text_body_template: |2
 
         %{message}
+    account_suspended:
+      title: "Account Sospeso"
+      subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
+      text_body_template: |
+        Sei stato sospeso dal forum fino a %{suspended_till}.
+
+        %{reason}
+
+        %{message}
+    account_exists:
+      title: "L'account esiste già"
+      subject_template: "[%{email_prefix}] L'account esiste già"
+      text_body_template: |
+        Hai appena cercato di creare un account su %{site_name}, o hai tentato di cambiare l'email di un account su %{email}. Tuttavia, un account esiste già per %{email}.
+
+        Se hai dimenticato la tua password, [reimpostala adesso](%{base_url}/password-reset).
+
+        Se non hai cercato di creare un account per %{email} o di cambiare il tuo indirizzo email, non ti preoccupare – puoi tranquillamente ignorare questo messaggio.
+
+        Se hai delle domande, [contatta il nostro amichevole staff](%{base_url}/about).
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
       since_last_visit: "Dalla tua ultima visita"

@@ -187,12 +187,15 @@ Discourse::Application.routes.draw do
     put "customize/embedding" => "embedding#update", constraints: AdminConstraint.new
 
     get "flags" => "flags#index"
-    get "flags/:filter" => "flags#index"
+    get "flags/:filter" => "flags#index", as: 'flags_filtered'
+    get "flags/topics/:topic_id" => "flags#index"
     post "flags/agree/:id" => "flags#agree"
     post "flags/disagree/:id" => "flags#disagree"
     post "flags/defer/:id" => "flags#defer"
 
+    resources :flagged_topics, constraints: StaffConstraint.new
     resources :themes, constraints: AdminConstraint.new
+
     post "themes/import" => "themes#import"
     post "themes/upload_asset" => "themes#upload_asset"
     get "themes/:id/preview" => "themes#preview"
@@ -689,6 +692,7 @@ Discourse::Application.routes.draw do
   get "favicon/proxied" => "static#favicon", format: false
 
   get "robots.txt" => "robots_txt#index"
+  get "offline.html" => "offline#index"
   get "manifest.json" => "metadata#manifest", as: :manifest
   get "opensearch" => "metadata#opensearch", format: :xml
 

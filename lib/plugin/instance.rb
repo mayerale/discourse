@@ -90,6 +90,15 @@ class Plugin::Instance
     end
   end
 
+  def replace_flags
+    settings = ::FlagSettings.new
+    yield settings
+
+    reloadable_patch do |plugin|
+      ::PostActionType.replace_flag_settings(settings) if plugin.enabled?
+    end
+  end
+
   def whitelist_staff_user_custom_field(field)
     reloadable_patch do |plugin|
       ::User.register_plugin_staff_custom_field(field, plugin) if plugin.enabled?
@@ -100,6 +109,18 @@ class Plugin::Instance
     reloadable_patch do |plugin|
       AvatarLookup.lookup_columns << column
       AvatarLookup.lookup_columns.uniq!
+    end
+  end
+
+  def add_body_class(class_name)
+    reloadable_patch do |plugin|
+      ::ApplicationHelper.extra_body_classes << class_name if plugin.enabled?
+    end
+  end
+
+  def rescue_from(exception, &block)
+    reloadable_patch do |plugin|
+      ::ApplicationController.rescue_from(exception, &block)
     end
   end
 
@@ -501,8 +522,8 @@ JS
   end
 
   def reloadable_patch(plugin = self)
-    if Rails.env.development? && defined?(ActionDispatch::Reloader)
-      ActionDispatch::Reloader.to_prepare do
+    if Rails.env.development? && defined?(ActiveSupport::Reloader)
+      ActiveSupport::Reloader.to_prepare do
         # reload the patch
         yield plugin
       end

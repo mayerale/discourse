@@ -29,6 +29,8 @@ export function loadTopicView(topic, args) {
   });
 }
 
+export const ID_CONSTRAINT = /^\d+$/;
+
 const Topic = RestModel.extend({
   message: null,
   errorLoading: false,
@@ -99,6 +101,17 @@ const Topic = RestModel.extend({
     return newTags;
   },
 
+  @computed("suggested_topics")
+  suggestedTopics(suggestedTopics) {
+    if (suggestedTopics) {
+      const store = this.store;
+
+      return this.set('suggested_topics', suggestedTopics.map(st => {
+        return store.createRecord('topic', st);
+      }));
+    }
+  },
+
   replyCount: function() {
     return this.get('posts_count') - 1;
   }.property('posts_count'),
@@ -122,7 +135,7 @@ const Topic = RestModel.extend({
     const categoryName = this.get('categoryName');
     let category;
     if (categoryName) {
-      category = Discourse.Category.list().findBy('name', categoryName);
+      category = this.site.get('categories').findBy('name', categoryName);
     }
     this.set('category', category);
   }.observes('categoryName'),

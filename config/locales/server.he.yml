@@ -46,6 +46,7 @@ he:
         no_message_id_error: "קורה כאשר למייל אין 'Message-Id' בכותרת."
         auto_generated_email_error: "קורה כאשר כותרת ה״קדימות״ מכוונת ל: רשימה, זבל, תפזורת או מענה-אוטומטי, או כאשר כותרת אחרת כוללת: נשלח-אוטומטית, מענה-אוטומטי או נוצר-אוטומטית."
         no_body_detected_error: "קורה כאשר לא הצלחנו לחלץ גוף ולא היו קבצים מצורפים."
+        no_sender_detected_error: "קורה כשאנחנו לא מצליחים כתובת מייל תקינה בכותרת ״From״."
         inactive_user_error: "קורה כאשר השולח אינו פעיל."
         blocked_user_error: "קורה כאשר השולח נחסם."
         bad_destination_address: "קורה כאשר אף אחת מהכתובות ב To/CC/Bcc לא מתאימה לאף כתובת מייל נכנסת."
@@ -210,6 +211,7 @@ he:
     user_posts: "פוסטים אחרונים של @%{username}"
     user_topics: "נושאים אחרונים של @%{username}"
     tag: "נושאים מתוייגים"
+    badge: "עיטור של %{display_name} ב-%{site_title}"
   too_late_to_edit: "פוסט זה נוצר לפני זמן רב מידי. לא ניתן יותר לערוך או למחוק אותו."
   revert_version_same: "הגרסה הנוכחית זהה לגרסה אליה אתם מנסים לחזור."
   excerpt_image: "תמונה"
@@ -321,6 +323,7 @@ he:
               too_many_users: "אתם יכולים לשלוח אזהרות רק למשתמש/ת אחד בכל פעם."
               cant_send_pm: "מצטערים, אינכם יכולים לשלוח הודעה פרטית למשתמש זה."
               no_user_selected: "עליכם לבחור משתמש/ת תקניים."
+              reply_by_email_disabled: "תגובה באמצעות מייל נוטרלה"
             featured_link:
               invalid: "אינו תקין. URL אמור לכלול http:// או https://."
               invalid_category: "לא ניתן לעריכה בקטגוריה זו."
@@ -438,6 +441,10 @@ he:
     leader:
       title: "מוביל"
     change_failed_explanation: "ניסיתם להוריד ברמה את %{user_name} ל- '%{new_trust_level}'. אולם רמת האמון שלהם היא כבר '%{current_trust_level}'. %{user_name} ישאר/תישאר ב-'%{current_trust_level}' - אם ברצונכם להוריד את המשתמש/ת נעלו קודם את רמת האמון"
+  post:
+    image_placeholder:
+      broken: "תמונה זו שבורה"
+      large: "התמונה גדולה מכדי להציג אותה כאן; לחצו כדי לצפות"
   rate_limiter:
     slow_down: "ביצעתם פעולה זו מספר רב מדי של פעמים. נסו שוב מאוחר יותר."
     too_many_requests: "יש לנו מגבלה יומית על מספר הפעמים שניתן לבצע פעולה זו. אנא המתינו %{time_left} לפני ניסיון חוזר."
@@ -617,12 +624,17 @@ he:
       short_description: 'הצביעו עבור פוסט זה'
       long_form: 'הצבעתם לפוסט זה'
   user_activity:
+    no_default:
+      others: "אין פעילות."
     no_bookmarks:
       self: "אין לכם פוסטים שסומנו בסימניה, סימון פוסטים מאפשר לכם לגשת אליהם בקלות בהמשך."
       others: "אין סימניות."
     no_likes_given:
       self: "לא עשיתם לייק לאף פוסט."
       others: "אין פוסטים שנעשה להם לייק."
+    no_replies:
+      self: "לא הגבתם לאף פוסט."
+      others: "אין תגובות."
   topic_flag_types:
     spam:
       title: 'ספאם'
@@ -964,7 +976,7 @@ he:
     allow_index_in_robots_txt: "פרטו ב-robots.txt שלאתר זה מותר להיות מאונדקס על ידי מנועי חיפוש."
     email_domains_blacklist: "רשימה מופרדת בצינור (pipe) של דומיינים של אימייל אשר מהם משתמשים לא מורשים לרשום חשבונות. למשל: mailinator.com|trashmail.net"
     email_domains_whitelist: "רשימה מופרדת בצינור (pipe) אשר ר-ק ממנה משתמשים יכולים לרשום חשבונות. א-ז-ה-ר-ה: משתמשים עם אימיילים מדומיינים אחרים לא יורשו!"
-    forgot_password_strict: "אל תיידעו משתמשים בנוגע לקיום חשבון כשהם משתמשים באפשרות של ״שכחתי סיסמה״."
+    hide_email_address_taken: "אל תיידעו משתמשים בנוגע לקיום חשבון כשהם משתמשים באפשרות של ״שכחתי סיסמה״."
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמש/ת בכל המכשירים"
     version_checks: "שלחו פינג להאב של Discourse לעדכוני גרסה וכדי להציג מסרים אודות גרסאות בלוח התצוגה ב /admin"
     new_version_emails: "שלחו דוא\"ל לכתובת של contact_email כשגרסה חדשה של Discourse זמינה."
@@ -1066,6 +1078,7 @@ he:
     allow_all_attachments_for_group_messages: "אפשרו צירוף קבצים להודעות לקבוצות."
     png_to_jpg_quality: "האיכות של קובץ JPG שמומר (1 הנמוכה ביותר, 99 הטובה ביותר, 100 לניטרול)."
     allow_staff_to_upload_any_file_in_pm: "אפשרו לחברי צוות להעלות כל קובץ בהודעה פרטית."
+    strip_image_metadata: "הסרת מטה-דאטה מהתמונה"
     enable_flash_video_onebox: "אפשרו הטמעת קישורי swf ו-flv (פלאש של אדובי) ב Oneboxes. אזהרה: עלול להביא לבעיות אבטחה באתר."
     default_invitee_trust_level: "ברירת מחדל של רמת אמון (0-4) של משתמשים מוזמנים."
     default_trust_level: "רמת אמון (0-4) לכל המשתמשים החדשים. אזהרה! שינוי של משתנה זה שם אתכם בסיכון רציני לספאם."
@@ -1198,7 +1211,6 @@ he:
     pop3_polling_username: "שם המשתמש/ת לחשבון ה-POP3 לתשאול דוא\"ל."
     pop3_polling_password: "הסיסמה לחשבון ה-POP3 למשיכת הדוא\"ל."
     log_mail_processing_failures: "רישום של כל בעיות העיבוד ל http://yoursitename.com/logs"
-    email_in: "אפשרו למשתמשים לפרסם נושאים חדשים באמצעות דוא\"ל (דורש תשאול באמצעות pop3). הגדירו את הכתובת בלשונית \"הגדרות\" עבור כל קטגוריה."
     email_in_min_trust: "רמת האמון המינימלית הנדרשת למשתמשים כדי שיוכלו להעלות נושאים חדשים באמצעות הדוא\"ל."
     email_prefix: "ה[תווית] שתשמש כנושא של מיילים. אם לא יוגדר, ברירת המחדל תכוון ל'כותרת' אם לא יוגדר אחרת."
     email_site_title: "הכותרת של האתר שתשמש כשם השולח של דוא\"ל מהאתר. במידה ולא יוגדר ערך, תכוון ברירת המחדל ל\"כותרת\". אם ה\"כותרת\" שלכם מכילה תוים שאינם מותרים לשימוש במחרוזות \"שם השולח\" בדוא\"ל, השתמשו בהגדרה זו."
@@ -1351,6 +1363,7 @@ he:
       email_polling_disabled: "עליכם לאפשר ידני או תשאול POP3 לפני שתאפשרו מענה באמצעות מייל."
       user_locale_not_enabled: "לפני שתוכלו להפעיל אפשרות זאת, יש לאפשר \"הגדרות מקומיות מותאמות משתמש/ת\""
       invalid_regex: "ביטוי רגולרי לא תקין או לא מותר."
+      enable_sso_disabled: "אתם חייבים קודם כל לאפשר ״אפשור sso״ לפני שאתם מאפשרים הגדרה זו."
   search:
     within_post: "#%{post_number} פוסטים של %{username}"
     types:
@@ -1653,15 +1666,6 @@ he:
       ### הערות בנוגע לגרסה
 
       %{notes}
-  queued_posts_reminder:
-    title: "תזכורת פוסטים בתור"
-    subject_template:
-      one: "[%{site_name}] פוסט 1 ממתין לסקירה"
-      other: "[%{email_prefix}] %{count} פוסטים ממתינים לסקירה"
-    text_body_template: |
-      שלום,
-
-      פוסטים של משתמשים חדשים הושהו לצורך בדיקה והם כרגע ממתינים לסקירה. [אשרו או דחו אותם כאן](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "הפוסט שלכם סומן כ **מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון. "
     inappropriate: "התגובה שלך סומנה כ**לא מתאימה**: הקהילה מרגישה שהיא פוגענית או הפרה של [הנחיות הקהילה](/guidelines)"
@@ -1965,6 +1969,8 @@ he:
     new_user_of_the_month:
       title: "אתם המשתמשים החדשים של החודש!"
       subject_template: "אתם המשתמשים החדשים של החודש!"
+    queued_posts_reminder:
+      title: "תזכורת פוסטים בתור"
   unsubscribe_link: |
     כדי להפסיק את המיילים האלו, [לחצו כאן](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2224,6 +2230,10 @@ he:
     see_more: "עוד"
     search_title: "חיפוש באתר זה"
     search_google: "גוגל"
+  login_required:
+    welcome_message: |
+      ## [ברוך בואך אל %{title}](#welcome)
+      נדרש חשבון. נא ליצור חשבון או להיכנס כדי להמשיך.
   terms_of_service:
     title: "תנאי השימוש"
     signup_form_message: 'קראתי את ואני מסכים/מה עם <a href="/tos" target="_blank">תנאי השירות</a>.'
@@ -2731,6 +2741,13 @@ he:
       description: תרומות יוצאות מהכלל בחודש הראשון שלהם
       long_description: |
         עיטור זה מוענק כדי לברך שני משתמשים חדשים בכל חודש בעבור תרומות מצטיינות שלהם, שנמדדות לפי תדירות הלייקים לפוסטים שלכם, וממי הם ניתנו.
+    enthusiast:
+      name: נלהב
+      description: ביקרו 10 ימים
+    aficionado:
+      description: ביקרו 100 ימים
+    devotee:
+      description: ביקרו 365 ימים
     badge_title_metadata: "עיטור ב-%{site_title} של %{display_name}"
   admin_login:
     success: "דוא\"ל נשלח"

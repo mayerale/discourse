@@ -116,6 +116,7 @@ nb_NO:
       split_topic: "splittet dette emnet %{when}"
       invited_user: "inviterte %{who} %{when}"
       invited_group: "inviterte %{who} %{when}"
+      user_left: "%{who} la igjen denne meldingen %{when}"
       removed_user: "fjernet %{who} %{when}"
       removed_group: "fjernet %{who} %{when}"
       autoclosed:
@@ -531,6 +532,7 @@ nb_NO:
       disable_jump_reply: "Ikke hopp til ditt nye innlegg etter svar"
       dynamic_favicon: "Vis antall nye / oppdaterte emner på nettleser ikonet"
       theme_default_on_all_devices: "Gjør dette til forvalgt drakt på alle mine enheter"
+      allow_private_messages: "Tillat andre brukere å sende meg private meldinger"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
       change: "Endre"
@@ -540,6 +542,7 @@ nb_NO:
       admin_tooltip: "Denne brukeren er en administrator"
       blocked_tooltip: "Denne brukeren er blokkert"
       suspended_notice: "Denne brukeren er bannlyst til {{date}}."
+      suspended_permanently: "Brukeren er bannlyst."
       suspended_reason: "Begrunnelse:"
       github_profile: "Github"
       email_activity_summary: "Oppsummering av aktivitet"
@@ -805,11 +808,11 @@ nb_NO:
           one: "innlegg skrevet"
           other: "innlegg skrevet"
         likes_given:
-          one: "<i class='fa fa-heart'></i> gitt"
-          other: "<i class='fa fa-heart'></i> gitt"
+          one: "gitt"
+          other: "gitt"
         likes_received:
-          one: "<i class='fa fa-heart'></i> mottatt"
-          other: "<i class='fa fa-heart'></i> mottatt"
+          one: "mottatt"
+          other: "mottatt"
         days_visited:
           one: "dag besøkt"
           other: "dager besøkt"
@@ -927,6 +930,7 @@ nb_NO:
     private_message_info:
       title: "Send"
       invite: "Inviter andre…"
+      leave_message: "Ønsker du virkelig å legge igjen denne meldingen?"
       remove_allowed_user: "Er du sikker på at du vil fjerne {{name}} fra denne meldingen?"
       remove_allowed_group: "Vil du virkelig fjerne {{name}} fra denne meldingen?"
     email: 'E-post'
@@ -1129,10 +1133,6 @@ nb_NO:
       olist_title: "Nummerert liste"
       ulist_title: "Kulepunktliste"
       list_item: "Listeelement"
-      heading_label: "O"
-      heading_title: "Overskrift"
-      heading_text: "Overskrift"
-      hr_title: "Horisontalt skille"
       help: "Hjelp for redigering i Markdown"
       toggler: "gjem eller vis redigeringspanelet"
       modal_ok: "OK"
@@ -1148,29 +1148,29 @@ nb_NO:
       empty: "Ingen varsler funnet."
       more: "se gamle varsler"
       total_flagged: "totalt rapporterte innlegg"
-      mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      mentioned: "<span>{{username}}</span> {{description}}"
+      group_mentioned: "<span>{{username}}</span> {{description}}"
+      quoted: "<span>{{username}}</span> {{description}}"
+      replied: "<span>{{username}}</span> {{description}}"
+      posted: "<span>{{username}}</span> {{description}}"
+      edited: "<span>{{username}}</span> {{description}}"
+      liked: "<span>{{username}}</span> {{description}}"
+      liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} og 1 anne</span> {{description}}</p>"
-        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} og {{count}} andre</span> {{description}}</p>"
-      private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
-      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ble tildelt '{{description}}'</p>"
-      topic_reminder: "<i title='emnepåminnelse' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Nytt emne</span> {{description}}</p>"
+        one: "<span>{{username}}, {{username2}} og én annen</span> {{description}}"
+        other: "<span>{{username}}, {{username2}} og {{count}} andre</span> {{description}}"
+      private_message: "<span>{{username}}</span> {{description}}"
+      invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
+      invited_to_topic: "<span>{{username}}</span> {{description}}"
+      invitee_accepted: "<span>{{username}}</span> godtok din invitasjon"
+      moved_post: "<span>{{username}}</span> flyttet {{description}}"
+      linked: "<span>{{username}}</span> {{description}}"
+      granted_badge: "Gjorde seg fortjent til '{{description}}'"
+      topic_reminder: "<span>{{username}}</span> {{description}}"
+      watching_first_post: "<span>Nytt emne</span> {{description}}"
       group_message_summary:
-        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} melding i {{group_name}}-gruppens innboks</p>"
-        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} meldinger i {{group_name}}-gruppens innboks</p>"
+        one: "{{count}} melding i din {{group_name}} innboks"
+        other: "{{count}} meldinger i din {{group_name}} innboks"
       alt:
         mentioned: "Nevnt av"
         quoted: "Sitert av"
@@ -1409,13 +1409,18 @@ nb_NO:
         remove: "Fjern utløp"
         publish_to: "Publiser til:"
         when: "Når:"
+        public_timer_types: Emneutløp
+        private_timer_types: Brukerstyrte emneutløp
       auto_update_input:
+        none: "Velg et tidsrom"
         later_today: "Senere i dag"
         tomorrow: "I morgen"
         later_this_week: "Senere denne uken"
         this_weekend: "Denne uken"
         next_week: "Neste uke"
+        two_weeks: "To uker"
         next_month: "Neste måned"
+        forever: "For alltid"
         pick_date_and_time: "Velg dato og tid"
         set_based_on_last_post: "Lukk basert på siste post"
       publish_to_category:
@@ -2168,7 +2173,7 @@ nb_NO:
         hamburger_menu: '<b>=</b> Åpne hamburgermeny'
         user_profile_menu: '<b>p</b> Åpne brukermenyen'
         show_incoming_updated_topics: '<b>.</b> Vis oppdaterte emner'
-        search: '<b>/</b> eller <b>ctrl</b>+<b>shift</b>+<b>s</b> Søk'
+        search: '<b>/</b> eller <b>Ctrl</b>+<b>Alt</b>+<b>f</b> Søk'
         help: '<b>?</b> Åpne tastaturhjelp'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Avvis Nye/Innlegg'
         dismiss_topics: '<b>x</b>, <b>t</b> Avvis emner'
@@ -2241,7 +2246,10 @@ nb_NO:
       tags: "Stikkord"
       choose_for_topic: "velg alternative stikkord for dette emnet"
       delete_tag: "Slett stikkord"
-      delete_confirm: "Er du sikker på at du vil slette det stikkordet?"
+      delete_confirm:
+        one: "Er du sikker på at du ønsker å slette dette stikkordet og fjerne det fra emnet det er tilknyttet?"
+        other: "Er du sikker på at du ønsker å slette dette stikkordet og fjerne det fra {{count}} emner det er tilknyttet?"
+      delete_confirm_no_topics: "Er du sikker på at du ønsker å slette dette stikkordet?"
       rename_tag: "Gi stikkord nytt navn"
       rename_instructions: "Velg et nytt navn for dette stikkordet:"
       sort_by: "Sorter etter:"
@@ -2369,8 +2377,9 @@ nb_NO:
         by: "av"
       flags:
         title: "Rapporteringer"
-        old: "Gamle"
-        active: "Aktive"
+        active_posts: "Rapporterte innlegg"
+        old_posts: "Gamle rapporterte innlegg"
+        topics: "Rapporterte innlegg"
         agree: "Godta"
         agree_title: "Bekreft at denne rapporteringen er gyldig og korrekt"
         agree_flag_modal_title: "Godta og…"
@@ -2398,6 +2407,8 @@ nb_NO:
         clear_topic_flags: "Ferdig"
         clear_topic_flags_title: "Emnet har blitt undersøkt og problemer har blitt løst. Klikk Ferdig for å fjerne rapporteringene."
         more: "(flere svar…)"
+        suspend_user: "Bannlys bruker"
+        suspend_user_title: "Bannlys bruker for dette innlegget"
         dispositions:
           agreed: "enig"
           disagreed: "uenig"
@@ -2408,27 +2419,24 @@ nb_NO:
         system: "System"
         error: "Noe gikk galt"
         reply_message: "Svar"
-        no_results: "Det er ingen rapporteringer."
+        no_results: "Det er ingen rapporterte innlegg."
         topic_flagged: "Dette emnet har blitt rapportert."
+        show_full: "vis hele innlegget"
         visit_topic: "Besøk emnet for å utføre handling"
         was_edited: "Innlegget ble redigert etter første rapportering"
         previous_flags_count: "Dette innlegget har allerede blitt rapportert {{count}} ganger."
-        summary:
-          action_type_3:
-            one: "irrelevant"
-            other: "irrelevant x{{count}}"
-          action_type_4:
-            one: "upassende"
-            other: "upassende x{{count}}"
-          action_type_6:
-            one: "tilpasset"
-            other: "tilpasset x{{count}}"
-          action_type_7:
-            one: "tilpasset"
-            other: "tilpasset x{{count}}"
-          action_type_8:
-            one: "nettsøppel"
-            other: "nettsøppel x{{count}}"
+        show_details: "Vis rapportdetaljer"
+        flagged_topics:
+          topic: "Emne"
+          type: "Type"
+          users: "Brukere"
+          last_flagged: "Sist rapporter"
+        short_names:
+          off_topic: "urelatert"
+          inappropriate: "upassende"
+          spam: "spam"
+          notify_user: "egendefinert"
+          notify_moderators: "egendefinert"
       groups:
         primary: "Primærgruppe"
         no_primary: "(ingen primærgruppe)"
@@ -2950,6 +2958,7 @@ nb_NO:
         form:
           label: 'Nytt ord:'
           placeholder: 'helt ord eller * som jokertegn'
+          placeholder_regexp: "regulært uttrykk"
           add: 'Legg til'
           success: 'Suksess'
           upload: "Last opp"
@@ -3011,10 +3020,15 @@ nb_NO:
         suspend_failed: "Noe gikk galt ved bannlysing av denne brukeren {{error}}"
         unsuspend_failed: "Noe gikk galt ved gjeninnsetting av denne brukeren {{error}}"
         suspend_duration: "Hvor lenge vil du bannlyse denne brukeren? (dager)"
-        suspend_duration_units: "(dager)"
         suspend_reason_label: "Hvorfor vil du bannlyse? Denne teksten <b>vil være synlig for alle</b> på denne brukerens profilside, og blir vist til brukeren om de skulle forsøke å logge inn. Fatt deg i korthet."
+        suspend_reason_hidden_label: "Hvorfor vil du bannlyse? Denne teksten vil bli vist til brukeren når vedkommende prøver å logge inn. Fatt deg i korthet."
         suspend_reason: "Begrunnelse"
+        suspend_reason_placeholder: "Bannlysningsgrunn"
+        suspend_message: "E-postmelding"
+        suspend_message_placeholder: "Alternativt, kan du detaljere bannlysningen og det vil bli sendt per e-post til brukeren."
         suspended_by: "Bannlyst av"
+        suspended_until: "(til %{until})"
+        cant_suspend: "Brukeren kan ikke bannlyses."
         delete_all_posts: "Slett alle innlegg"
         delete_all_posts_confirm_MF: "Du er i ferd med å slette {INNLEGG, flertall, ett {ett innlegg} andre {# innlegg}} og {INNLEGG, flertall, ett {ett emne} andre {# emner}}. Er du sikker?"
         suspend: "Bannlyst"

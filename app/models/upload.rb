@@ -79,7 +79,7 @@ class Upload < ActiveRecord::Base
     # we store relative urls, so we need to remove any host/cdn
     url = url.sub(Discourse.asset_host, "") if Discourse.asset_host.present?
     # when using s3, we need to replace with the absolute base url
-    url = url.sub(SiteSetting.s3_cdn_url, Discourse.store.absolute_base_url) if SiteSetting.s3_cdn_url.present?
+    url = url.sub(SiteSetting.Upload.s3_cdn_url, Discourse.store.absolute_base_url) if SiteSetting.Upload.s3_cdn_url.present?
 
     # always try to get the path
     uri = URI(url) rescue nil
@@ -170,6 +170,7 @@ end
 #
 # Indexes
 #
+#  index_uploads_on_extension   (lower((extension)::text))
 #  index_uploads_on_id_and_url  (id,url)
 #  index_uploads_on_sha1        (sha1) UNIQUE
 #  index_uploads_on_url         (url)

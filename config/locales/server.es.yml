@@ -263,13 +263,13 @@ es:
 
       Para más consejos, [visita las directrices de nuestra comunidad](/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text}.
     avatar: |
-      ### Por qué no una imagen para tu cuenta?
+      ### ¿Por qué no elegir una imagen para tu cuenta?
 
-      Has publicado pocos temas y respuestas, pero tu imagen de perfil no es único como lo eres tú., es sólo una letra.
+      Has publicado unos pocos temas y respuestas, pero tu imagen de perfil no es único como lo eres tú... y ahora es solo una letra.
 
-      Has considerado **[visitar tu perfil](%{profile_path})** y subir una imagen que te represente?
+      ¿Has considerado **[visitar tu perfil](%{profile_path})** y subir una imagen que te represente?
 
-      Es más fácil seguir debates y encontrar personas interesantes en las conversaciones cuando todos tienen una imagen de perfil única!
+      ¡Es más fácil seguir debates y encontrar personas interesantes en las conversaciones cuando todos tienen una imagen de perfil única!
     sequential_replies: |
       ### Considera la posibilidad de responder a varios posts a la vez
 
@@ -621,12 +621,17 @@ es:
       short_description: 'Vota por este post'
       long_form: 'Votado para este post'
   user_activity:
+    no_default:
+      others: "Sin actividad."
     no_bookmarks:
       self: "No tienes temas en marcadores, añadir temas a marcadores te permite acceder a ellos más tarde fácilmente."
       others: "Sin marcadores."
     no_likes_given:
       self: "No le has dado a \"Me gusta\" en ningún tema."
       others: "No te gusta ningún tema."
+    no_replies:
+      self: "No has respondido a ningún post."
+      others: "Sin respuestas."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -701,7 +706,7 @@ es:
       xaxis: "Día"
       yaxis: "Número de topics nuevos"
     posts:
-      title: "Nuevos posts"
+      title: "Posts"
       xaxis: "día"
       yaxis: "Número de posts nuevos"
     likes:
@@ -969,7 +974,7 @@ es:
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
     email_domains_blacklist: "Una lista de dominios de correo electrónico con los que los usuarios no se podrán registrar. Ejemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
-    forgot_password_strict: "No informar a los usuarios de la existencia de una cuenta cuando utilicen el diálogo de pérdida de contraseña."
+    hide_email_address_taken: "No informar a los usuarios de la existencia de una cuenta cuando utilicen el diálogo de pérdida de contraseña."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
     new_version_emails: "Enviar un email a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
@@ -1203,7 +1208,6 @@ es:
     pop3_polling_username: "El nombre de usuario de la cuenta POP3 para hacer polling de e-mails."
     pop3_polling_password: "La contraseña de la cuenta POP3 para hacer polling de correos."
     log_mail_processing_failures: "Registra todos los fallos de procesamiento de email a http://yoursitename.com/logs"
-    email_in: "Permitir a los usuarios crear nuevos temas por email (requiere el polling pop3). Configura las direcciones en la pestaña \"Ajustes\" de cada categoría."
     email_in_min_trust: "El mínimo nivel de confianza requerido para poder publicar nuevos temas por email."
     email_prefix: "La [etiqueta] utilizada en el asunto de los emails. Si no está configurado, será por defecto el 'título'."
     email_site_title: "El título del sitio utilizado como remitente de los emails desde el sitio. Si no está configurado, será por defecto 'título'. Si tu 'título' contiene caracteres que no están permitidos en las cadenas del remitente del email, usa esta opción."
@@ -1675,15 +1679,6 @@ es:
 
       %{notes}
 
-  queued_posts_reminder:
-    title: "Recordatorio de post en revisión"
-    subject_template:
-      one: "[%{email_prefix}] 1 post esperando ser revisado"
-      other: "%{email_prefix}[] %{count} posts esperando ser revisados"
-    text_body_template: |
-      Hola,
-
-      Algunos mensajes de usuarios nuevos  han sido retenidos para moderar y están esperando ser revisados. [Apruébalos o recházalos aquí](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Tu post fue reportado como **off-topic**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o el primer post."
     inappropriate: "Tu post fue reportado como **inapropiado**: la comunidad piensa que es ofensivo, abusivo o que vulnera alguna de [nuestros consejos de uso](/guidelines)."
@@ -2024,6 +2019,10 @@ es:
         Este premio es solo otorgado para usuarios nuevos del mes, y será visible siempre en tu [página de usuario](%{base_url}/my/badges).
 
         Usted se ha convertido rápidamente en un valioso miembro de nuestra comunidad. ¡Gracias por unirse, y mantener el gran trabajo!
+    queued_posts_reminder:
+      subject_template:
+        one: "1 post esperando a ser revisado"
+        other: "%{count} posts esperando a ser revisados"
   unsubscribe_link: |
     Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2188,7 +2187,7 @@ es:
       unread_messages: "Mensajes no leídos"
       unread_notifications: "Notificaciones no leídas"
       liked_received: "Me gusta recibidos"
-      new_posts: "Nuevos temas"
+      new_posts: "Nuevos posts"
       new_users: "Nuevos usuarios"
       popular_topics: "Temas populares"
       follow_topic: "Seguir este tema"
@@ -2904,6 +2903,18 @@ es:
       description: Contribuciones excepcionales en su primer mes
       long_description: |
         Este distintivo es otorgado para felicitar a dos nuevos usuarios cada mes por sus excelentes colaboraciones, y estadísticas sobre cuán seguido sus posts han sido valorados y por quiénes.
+    enthusiast:
+      name: Entusiasta
+      description: Nos visitó 10 días seguidos
+      long_description: Este distintivo se concede al visitarnos 10 días consecutivos. ¡Gracias por quedarte con nosotros más de una semana!
+    aficionado:
+      name: Aficionado
+      description: Nos visitó 100 días seguidos
+      long_description: Este distintivo se concede al visitarnos durante 100 días consecutivos. ¡Eso es más de tres meses!
+    devotee:
+      name: Devoto
+      description: Nos visitó 365 días seguidos
+      long_description: Este distintivo se concede al visitarnos 365 días consecutivos. ¡¡Un año entero!!
     badge_title_metadata: "%{display_name} distintivo en %{site_title}"
   admin_login:
     success: "Email enviado"

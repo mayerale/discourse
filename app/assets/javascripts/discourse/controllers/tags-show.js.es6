@@ -58,6 +58,8 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   max_posts: null,
   q: null,
 
+  categories: Ember.computed.alias('site.categoriesList'),
+
   queryParams: ['order', 'ascending', 'status', 'state', 'search', 'max_posts', 'q'],
 
   navItems: function() {
@@ -67,10 +69,6 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   showTagFilter: function() {
     return Discourse.SiteSettings.show_filter_by_tag;
   }.property('category'),
-
-  categories: function() {
-    return Discourse.Category.list();
-  }.property(),
 
   showAdminControls: function() {
     return !this.get('additionalTags') && this.get('canAdminTag') && !this.get('category');
@@ -115,7 +113,9 @@ export default Ember.Controller.extend(BulkTopicSelection, {
 
     deleteTag() {
       const self = this;
-      bootbox.confirm(I18n.t("tagging.delete_confirm"), function(result) {
+      const topicsLength = this.get('list.topic_list.topics.length');
+      const confirmText = topicsLength === 0 ? I18n.t("tagging.delete_confirm_no_topics") : I18n.t("tagging.delete_confirm", {count: topicsLength});
+      bootbox.confirm(confirmText, function(result) {
         if (!result) { return; }
 
         self.get("tag").destroyRecord().then(function() {

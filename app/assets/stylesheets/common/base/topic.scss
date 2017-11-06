@@ -95,6 +95,8 @@
   a[href] {
     float: right;
   }
+  margin-top: 1em;
+  max-width: 757px;
 }
 
 // Target the .badge-category text, the bullet icon needs to maintain `display: block`
@@ -147,7 +149,7 @@
   }
 
   .expand-links {
-    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
   }
 
   .track-link {
@@ -163,7 +165,7 @@
     li {
       margin-bottom: 0.5em;
       a[href] {
-        color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+        color: dark-light-choose($primary-medium, $secondary-medium);
       }
       .clicks {
         margin-left: 0.5em;

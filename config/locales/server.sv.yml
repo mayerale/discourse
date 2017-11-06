@@ -848,7 +848,7 @@ sv:
     allow_index_in_robots_txt: "Specificera i robots.txt att den här webbplatsen tillåter att bli indexerad av sökmotorer. "
     email_domains_blacklist: "En pipe-avgränsad lista av alla e-postdomän som användare inte tillåts registrera konton med. Exempel: mailinator.com, trashmail.net"
     email_domains_whitelist: "En pipe-avgränsad lista av alla e-postdomän som användare MÅSTE registrera konton med. VARNING: Användare med e-postdomän som inte finns på listan kommer inte att tillåtas!"
-    forgot_password_strict: "Informera inte användare om ett kontos existens när de försöker använda dialogen vid bortglömt lösenord. "
+    hide_email_address_taken: "Informera inte användare om ett kontos existens när de försöker använda dialogen vid bortglömt lösenord. "
     log_out_strict: "Vid utloggning, logga ut ALLA sessioner för den användaren på alla apparater"
     version_checks: "Pinga Discourse Hubben för versionsuppdatering och visa nya versionsmeddelanden på /admin översiktspanelen"
     new_version_emails: "Skicka ett mejl till contact_email när en ny version av Discourse finns tillgängligt."
@@ -1062,7 +1062,6 @@ sv:
     pop3_polling_username: "Användarnamn för POP3-kontot som ska sökas efter e-post."
     pop3_polling_password: "Lösenord för POP3-kontot som ska sökas efter e-post."
     log_mail_processing_failures: "Logga alla behandlingsfel för e-post till http://dinhemsida.se/logs"
-    email_in: "Tillåt användare att skapa nya ämnen via e-post (kräver POP3 sökning). Konfigurera adresserna i tabben med inställningar för varje kategori."
     email_in_min_trust: "Minsta förtroendenivå en användare behöver för att tillåtas skapa nya ämnen via e-post."
     email_prefix: "[label] används i ämnesraden för e-post. Om ej ifylld sätts standardrubriken 'title'."
     email_site_title: "Webbplatsens titel som används som avsändare för e-post från webbplatsen. Om ej ifylld sätts standardtiteln 'title'. Använd det alternativet om din titel innehåller tecken som inte tillåts i e-post avsändarsträngar."
@@ -1160,7 +1159,7 @@ sv:
     default_categories_watching: "Lista av kategorier som är bevakade som standard."
     default_categories_tracking: "Lista av kategorier som är följda som standard."
     default_categories_muted: "Lista av kategorier som är tystade som standard."
-    default_categories_watching_first_post: "Förteckning över kategorier i vilket första inlägget i varje nytt ämnet kommer att ses som standard."
+    default_categories_watching_first_post: "Förteckning över kategorier i vilket första inlägget i varje nytt ämne kommer att bevakas som standard."
     max_user_api_reqs_per_day: "Maximalt antal användare som API´t kräver per nyckel/dag"
     max_user_api_reqs_per_minute: "Maximalt antal användare API kräver på nyckel/minut"
     allow_user_api_key_scopes: "Lista över samtliga tillåtna användar-API nycklar "
@@ -1342,12 +1341,6 @@ sv:
     title: "Ny version mail skrivare"
   new_version_mailer_with_notes:
     title: "Ny version mail skrivare med anteckningar"
-  queued_posts_reminder:
-    title: "Påminnelse om köande inlägg"
-    text_body_template: |
-      Hej!
-
-      Meddelanden från nya användare väntar för närvarande på att granskas. [Godkänn eller avvisa dem här](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Ditt inlägg blev flaggat som **orelevant**. Medlemmarna i forumet kände att det inte är passande för ämnet, som definieras av rubriken och det första inlägget."
     inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande eller att det strider mot [våra riktlinjer](/guidelines)."
